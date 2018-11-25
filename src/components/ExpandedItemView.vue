@@ -39,17 +39,19 @@ export default {
       mapUrl: ""
     };
   },
-  mounted: function() {
-    this.distanceMatrix();
-  },
   computed: {
     content: function() {
       return this.$store.getters.expandedItemObject;
     }
   },
+  watch: {
+    "$store.getters.expandedItemObject"() {
+      this.tryAPIGeolocation();
+    }
+  },
   methods: {
     search: function(tag) {
-      this.$store.dispatch("expandedItemObject", {
+      this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
           image: "",
@@ -68,51 +70,60 @@ export default {
         query: { keywords: tag }
       });
     },
-    distanceMatrix: function() {
-      console.log("here");
-      navigator.geolocation.getCurrentPosition(position => {
-        this.userLat = position.coords.latitude;
-        this.userLng = position.coords.longitude;
-        var origin = { lat: this.userLat, lng: this.userLng };
-        var destination = {
-          lat: this.content.data.location.lat,
-          lng: this.content.data.location.lng
-        };
-        this.mapUrl =
-          "https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap" +
-          "&markers=color:blue%7Clabel:H%7C" +
-          this.userLat +
-          "," +
-          this.userLng +
-          "&markers=color:red%7Clabel:D%7C" +
-          this.content.data.location.lat +
-          "," +
-          this.content.data.location.lng +
-          "&key=AIzaSyB3HKFnDKKFFCM_dTgTJGsTEOtOg3PQb04";
-
-        var service = new google.maps.DistanceMatrixService();
-        var dis = "";
-        var dur = "";
-        var vm = this;
-        service.getDistanceMatrix(
-          {
-            origins: [origin],
-            destinations: [destination],
-            travelMode: "DRIVING",
-            unitSystem: google.maps.UnitSystem.IMPERIAL,
-            avoidHighways: false,
-            avoidTolls: false
-          },
-          function(response, status) {
-            if (status !== "OK") {
-              console.log("Error was: " + status);
-            } else {
-              vm.distance = response.rows[0].elements[0].distance.text;
-              vm.duration = response.rows[0].elements[0].duration.text;
-            }
-          }
-        );
+    tryAPIGeolocation: function() {
+      var vm = this;
+      $.post(
+        "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyB3HKFnDKKFFCM_dTgTJGsTEOtOg3PQb04",
+        function(success) {
+          vm.userLat = success.location.lat;
+          vm.userLng = success.location.lng;
+          vm.distanceMatrix();
+        }
+      ).fail(function(err) {
+        alert("API Geolocation error! \n\n" + err);
       });
+    },
+    distanceMatrix: function() {
+      var origin = { lat: this.userLat, lng: this.userLng };
+      var destination = {
+        lat: this.content.data.location.lat,
+        lng: this.content.data.location.lng
+      };
+      this.mapUrl =
+        "https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap" +
+        "&markers=color:blue%7Clabel:H%7C" +
+        this.userLat +
+        "," +
+        this.userLng +
+        "&markers=color:red%7Clabel:D%7C" +
+        this.content.data.location.lat +
+        "," +
+        this.content.data.location.lng +
+        "&key=AIzaSyB3HKFnDKKFFCM_dTgTJGsTEOtOg3PQb04";
+
+      var service = new google.maps.DistanceMatrixService();
+      var dis = "";
+      var dur = "";
+      var vm = this;
+      service.getDistanceMatrix(
+        {
+          origins: [origin],
+          destinations: [destination],
+          travelMode: "DRIVING",
+          unitSystem: google.maps.UnitSystem.IMPERIAL,
+          avoidHighways: false,
+          avoidTolls: false
+        },
+        function(response, status) {
+          if (status !== "OK") {
+            console.log("Error was: " + status);
+          } else {
+            console.log(response);
+            vm.distance = response.rows[0].elements[0].distance.text;
+            vm.duration = response.rows[0].elements[0].duration.text;
+          }
+        }
+      );
     }
   }
 };

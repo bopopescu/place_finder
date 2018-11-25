@@ -337,7 +337,7 @@ export default new Vuex.Store({
 			context.commit('setShowModal', true);
 		},
 
-		expandedItemObject(context, object) {
+		expandItemObject(context, object) {
 			console.log(object);
 			if (object.id === '') {
 				context.commit('setShowExpandedView', false);

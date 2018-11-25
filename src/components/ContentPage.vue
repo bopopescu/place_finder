@@ -110,7 +110,7 @@ export default {
       this.image = image;
     },
     info: function(item) {
-      this.$store.dispatch("expandedItemObject", {
+      this.$store.dispatch("expandItemObject", {
         id: item.id,
         data: {
           image: item.data.image,
@@ -126,7 +126,7 @@ export default {
       });
     },
     back: function() {
-      this.$store.dispatch("expandedItemObject", {
+      this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
           image: "",
