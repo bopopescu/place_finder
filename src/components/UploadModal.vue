@@ -308,14 +308,25 @@ export default {
     },
     codeAddress: function() {
       this.mapLoading = true;
+      var address;
+      if (this.contentAddress != undefined) {
+        address = this.contentAddress;
+      } else {
+        address = this.address;
+      }
       mapsClient.geocode(
         {
-          address: this.address
+          address: address
         },
         (err, response) => {
           if (!err) {
             var json = response.json.results;
-            this.address = json[0]["formatted_address"];
+            if (this.contentAddress != undefined) {
+              this.contentAddress = json[0]["formatted_address"];
+            } else {
+              this.address = json[0]["formatted_address"];
+            }
+            // this.address = json[0]["formatted_address"];
             this.placeLat = json[0]["geometry"]["location"]["lat"];
             this.placeLng = json[0]["geometry"]["location"]["lng"];
             this.mapLoading = false;
