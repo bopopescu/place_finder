@@ -326,7 +326,6 @@ export default {
             } else {
               this.address = json[0]["formatted_address"];
             }
-            // this.address = json[0]["formatted_address"];
             this.placeLat = json[0]["geometry"]["location"]["lat"];
             this.placeLng = json[0]["geometry"]["location"]["lng"];
             this.mapLoading = false;
