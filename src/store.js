@@ -34,6 +34,9 @@ export default new Vuex.Store({
 		modalObject: {},
 		expandedItemObject: {},
 		showExpandedView: false,
+		mapUrl: '',
+		distance: '',
+		duration: '',
 	},
 	getters: {
 		user: state => state.user,
@@ -53,6 +56,9 @@ export default new Vuex.Store({
 		modalObject: state => state.modalObject,
 		expandedItemObject: state => state.expandedItemObject,
 		showExpandedView: state => state.showExpandedView,
+		mapUrl: state => state.mapUrl,
+		distance: state => state.distance,
+		duration: state => state.duration,
 	},
 	mutations: {
 		setUser(state, user) {
@@ -90,6 +96,15 @@ export default new Vuex.Store({
 		},
 		setShowExpandedView(state, show) {
 			state.showExpandedView = show;
+		},
+		setMapUrl(state, url) {
+			state.mapUrl = url;
+		},
+		setDistance(state, distance) {
+			state.distance = distance;
+		},
+		setDuration(state, duration) {
+			state.duration = duration;
 		}
 	},
 	actions: {
@@ -322,6 +337,61 @@ export default new Vuex.Store({
 			context.commit('setSearchResults', results);
 		},
 
+		tryAPIGeolocation(context) {
+			var vm = this;
+			$.post(
+				"https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyB3HKFnDKKFFCM_dTgTJGsTEOtOg3PQb04",
+				function (success) {
+					var userLat = success.location.lat;
+					var userLng = success.location.lng;
+					var coords = { lat: userLat, lng: userLng };
+					vm.dispatch('distanceMatrix', coords);
+				}
+			).fail(function (err) {
+				alert("API Geolocation error! \n\n" + err);
+			});
+		},
+		distanceMatrix(context, userCoords) {
+			var origin = { lat: userCoords.lat, lng: userCoords.lng };
+			var destination = {
+				lat: context.getters.expandedItemObject.data.location.lat,
+				lng: context.getters.expandedItemObject.data.location.lng
+			};
+			var mapUrl =
+				"https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap" +
+				"&markers=color:blue%7Clabel:H%7C" +
+				userCoords.lat +
+				"," +
+				userCoords.lng +
+				"&markers=color:red%7Clabel:D%7C" +
+				destination.lat +
+				"," +
+				destination.lng +
+				"&key=AIzaSyB3HKFnDKKFFCM_dTgTJGsTEOtOg3PQb04";
+
+			context.commit('setMapUrl', mapUrl);
+
+			var service = new google.maps.DistanceMatrixService();
+			service.getDistanceMatrix(
+				{
+					origins: [origin],
+					destinations: [destination],
+					travelMode: "DRIVING",
+					unitSystem: google.maps.UnitSystem.IMPERIAL,
+					avoidHighways: false,
+					avoidTolls: false
+				},
+				function (response, status) {
+					if (status !== "OK") {
+						console.log("Error was: " + status);
+					} else {
+						context.commit('setDistance', response.rows[0].elements[0].distance.text);
+						context.commit('setDuration', response.rows[0].elements[0].duration.text);
+					}
+				}
+			);
+		},
+
 		modal(context, show) {
 			context.commit('setShowModal', show.show);
 			if (show.show) {
@@ -338,13 +408,12 @@ export default new Vuex.Store({
 		},
 
 		expandItemObject(context, object) {
-			console.log(object);
+			context.commit('setExpandedItemObject', object);
 			if (object.id === '') {
 				context.commit('setShowExpandedView', false);
 			} else {
 				context.commit('setShowExpandedView', true);
 			}
-			context.commit('setExpandedItemObject', object);
 		},
 	}
 });

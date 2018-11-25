@@ -110,20 +110,24 @@ export default {
       this.image = image;
     },
     info: function(item) {
-      this.$store.dispatch("expandItemObject", {
-        id: item.id,
-        data: {
-          image: item.data.image,
-          imageName: item.data.imageName,
-          description: item.data.description,
-          tags: item.data.tags,
-          address: item.data.address,
-          map: item.data.map,
-          location: item.data.location,
-          userename: item.data.username,
-          upload: false
-        }
-      });
+      this.$store
+        .dispatch("expandItemObject", {
+          id: item.id,
+          data: {
+            image: item.data.image,
+            imageName: item.data.imageName,
+            description: item.data.description,
+            tags: item.data.tags,
+            address: item.data.address,
+            map: item.data.map,
+            location: item.data.location,
+            userename: item.data.username,
+            upload: false
+          }
+        })
+        .then(() => {
+          this.$store.dispatch("tryAPIGeolocation");
+        });
     },
     back: function() {
       this.$store.dispatch("expandItemObject", {
