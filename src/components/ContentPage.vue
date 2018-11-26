@@ -1,7 +1,7 @@
 <template>
   <div>
     <a style="float: left; margin-top: 30px; margin-left: 75px;" v-on:click="back" v-if="showExpandedView"><i class="fas fa-arrow-left fa-2x"></i></a>
-    <transition name="expand">
+    <transition id="expanded-section" name="expand">
         <expanded-item-view v-if="showExpandedView" v-bind:class="{ 'expand-transition' : showExpandedView }"/>
     </transition>
     <section>
@@ -127,6 +127,9 @@ export default {
         })
         .then(() => {
           this.$store.dispatch("tryAPIGeolocation");
+
+          $("expanded-section").removeClass("expand-leave");
+          $("expanded-section").addClass("expand-transition");
         });
     },
     back: function() {
@@ -144,6 +147,8 @@ export default {
           upload: false
         }
       });
+      $("expanded-section").removeClass("expand-transition");
+      $("expanded-section").addClass("expand-leave");
     }
   }
 };
@@ -200,22 +205,5 @@ section {
   white-space: nowrap;
   overflow: hidden;
   display: block;
-}
-
-/* always present */
-.expand-transition {
-  transition: all 0.3s ease;
-  max-height: auto;
-  padding: 10px;
-  /* background-color: #fff; */
-  overflow: hidden;
-}
-/* .expand-enter defines the starting state for entering */
-/* .expand-leave defines the ending state for leaving */
-.expand-enter,
-.expand-leave {
-  height: 0;
-  padding: 0 10px;
-  opacity: 0;
 }
 </style>

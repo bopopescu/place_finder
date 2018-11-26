@@ -37,6 +37,7 @@ export default new Vuex.Store({
 		mapUrl: '',
 		distance: '',
 		duration: '',
+		reviewError: '',
 	},
 	getters: {
 		user: state => state.user,
@@ -59,6 +60,7 @@ export default new Vuex.Store({
 		mapUrl: state => state.mapUrl,
 		distance: state => state.distance,
 		duration: state => state.duration,
+		reviewError: state => state.reviewError,
 	},
 	mutations: {
 		setUser(state, user) {
@@ -105,6 +107,9 @@ export default new Vuex.Store({
 		},
 		setDuration(state, duration) {
 			state.duration = duration;
+		},
+		setReviewError(state, error) {
+			state.reviewError = error;
 		}
 	},
 	actions: {
@@ -297,6 +302,39 @@ export default new Vuex.Store({
 			});
 		},
 
+		addReview(context, info) {
+			firebase.auth().onAuthStateChanged((user) => {
+				if (user) {
+					context.commit('setIsLoading', true);
+
+					db.collection('uploads').doc(info.id).get().then(doc => {
+						var reviews = doc.data().reviews;
+						console.log(doc.data());
+						if (reviews === undefined) {
+							reviews = [];
+						}
+						reviews.push({ user: user.displayName, review: info.review, rating: info.rating });
+						db.collection('uploads').doc(info.id).update({
+							reviews: reviews
+						}).then((docRef) => {
+							context.commit('setIsLoading', false);
+							context.commit('setReviewError', '');
+						}).catch((error) => {
+							context.commit('setIsLoading', false);
+							context.commit('setReviewError', 'An error occurred. Please try again.');
+							console.log(error);
+						});
+					}).catch(error => {
+						context.commit('setIsLoading', false);
+						context.commit('setReviewError', 'An error occurred. Please try again.');
+						console.log(error);
+					});
+				} else {
+					context.commit('setReviewError', 'You must be logged in to leave a review');
+				}
+			})
+		},
+
 		deleteUpload(context, item) {
 			firebase.auth().onAuthStateChanged((user) => {
 				if (user) {
@@ -408,6 +446,7 @@ export default new Vuex.Store({
 		},
 
 		expandItemObject(context, object) {
+			context.commit('setReviewError', '');
 			context.commit('setExpandedItemObject', object);
 			if (object.id === '') {
 				context.commit('setShowExpandedView', false);

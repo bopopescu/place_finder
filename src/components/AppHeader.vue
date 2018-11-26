@@ -1,9 +1,10 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
   	<div class="navbar-brand">
-	    <a class="navbar-item navbar-text">
-	    	<strong>Title Placeholder</strong>
-	    </a>
+	    <router-link to="/" class="navbar-item navbar-text">
+        <i class="fas fa-camera fa-2x"></i>
+	    	<strong style="margin-left: 5px; font-size: 1.2em;">Pictogram</strong>
+	    </router-link>
 
 	    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
 	      <span aria-hidden="true"></span>
@@ -14,12 +15,9 @@
 
 	  <div id="navbarBasicExample" class="navbar-menu">
 	    <div class="navbar-start">
-	      <router-link to="/" class="navbar-item navbar-text">
-	        Home
-	      </router-link>
 
 	      <router-link to="/content" class="navbar-item navbar-text">
-	        Content
+	        All Content
 	      </router-link>
 
 				<form class="field navbar-item inputfield" v-on:submit.prevent="search">

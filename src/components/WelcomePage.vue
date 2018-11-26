@@ -2,8 +2,8 @@
 	<div class="overlay">
 		<transition name="slide-fade">
 			<header class="main-header" v-if="show">
-				<h1>Website Header Information</h1>
-				<h3>Website Subheader Information</h3>
+				<h1>Pictogram</h1>
+				<h3>A place where you can share and view photography destinations.</h3>
 
 				<transition name="slide-fade">
 					<div v-if="!loggedIn">

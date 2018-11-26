@@ -10,13 +10,16 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^0.19.0",
     "@google/maps": "^0.5.5",
     "axios": "^0.18.0",
     "cropperjs": "^1.4.3",
     "fast-crc32c": "^1.0.4",
     "firebase": "^5.5.8",
+    "firebase-admin": "^6.2.0",
     "firebaseauth": "^1.0.0",
     "google-distance-matrix": "^1.1.1",
+    "http2": "^3.3.7",
     "jquery": "^3.3.1",
     "moment": "^2.22.2",
     "startbootstrap-clean-blog": "^5.0.1",
