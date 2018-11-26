@@ -3,7 +3,7 @@
     <div style="margin-top: 20px;" class="box">
       <img class="container" id="image" v-bind:src="content.data.image">
       <br>
-      <h3>{{ averageRating }} / 5 ({{ reviews.length }} reviews)</h3>
+      <h3 v-if="reviews !== undefined">{{ averageRating }} / 5 ({{ reviews.length }} reviews)</h3>
       <br>
       <h3>Description</h3>
       <br>

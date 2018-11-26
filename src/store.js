@@ -221,6 +221,7 @@ export default new Vuex.Store({
 							}).then(function (docRef) {
 								context.commit('setIsLoading', false);
 								context.commit('setShowModal', false);
+								context.dispatch('getAllUploads');
 							}).catch(function (error) {
 								context.commit('setIsLoading', false);
 								console.log("Error uploading: ", error);
@@ -238,7 +239,6 @@ export default new Vuex.Store({
 				querySnapshot.forEach((doc) => {
 					content.push({ id: doc.id, data: doc.data() });
 				});
-				console.log(content);
 				context.commit('setAllContent', content);
 			});
 		},
@@ -363,13 +363,28 @@ export default new Vuex.Store({
 		},
 
 		doSearch(context, keywords) {
-			var strings = keywords.split(/,?\s+/);
+			let strings = keywords.split(/,?\s+/);
 			var results = [];
 			for (var i = 0; i < strings.length; i++) {
 				db.collection("uploads").where("tags", "array-contains", strings[i]).get().then((querySnapshot) => {
 					querySnapshot.forEach((doc) => {
 						results.push({ id: doc.id, data: doc.data() });
 					});
+					for (var n = 0; n < strings.length; n++) {
+						for (var j = 0; j < context.getters.allContent.length; j++) {
+							if (context.getters.allContent[j].data.address.toLowerCase().includes(strings[n].toLowerCase())) {
+								var found = false;
+								for (var k = 0; k < results.length; k++) {
+									if (results[k].id === context.getters.allContent[j].id) {
+										found = true;
+									}
+								}
+								if (!found) {
+									results.push(context.getters.allContent[j]);
+								}
+							}
+						}
+					}
 				});
 			}
 			context.commit('setSearchResults', results);
@@ -460,11 +475,13 @@ export default new Vuex.Store({
 			context.commit('setExpandedItemObject', object);
 			context.commit('setCurrReviews', object.data.reviews);
 			var total = 0.0;
-			for (var i = 0; i < object.data.reviews.length; i++) {
-				total += object.data.reviews[i].rating;
+			if (object.data.reviews !== undefined) {
+				for (var i = 0; i < object.data.reviews.length; i++) {
+					total += object.data.reviews[i].rating;
+				}
+				var average = total / object.data.reviews.length;
+				context.commit('setAverageRating', average);
 			}
-			var average = total / object.data.reviews.length;
-			context.commit('setAverageRating', average);
 			if (object.id === '') {
 				context.commit('setShowExpandedView', false);
 			} else {
