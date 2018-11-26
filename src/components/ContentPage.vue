@@ -94,12 +94,44 @@ export default {
       this.$store.dispatch("deleteUpload", item);
     },
     search: function(tag) {
+      this.$store.dispatch("expandItemObject", {
+        id: "",
+        data: {
+          image: "",
+          imageName: "",
+          description: "",
+          tags: "",
+          address: "",
+          reviews: [],
+          location: {},
+          userename: "",
+          upload: false
+        }
+      });
+      $("expanded-section").removeClass("expand-transition");
+      $("expanded-section").addClass("expand-leave");
       this.$router.push({
         path: "search",
         query: { keywords: tag }
       });
     },
     searchUser: function(username) {
+      this.$store.dispatch("expandItemObject", {
+        id: "",
+        data: {
+          image: "",
+          imageName: "",
+          description: "",
+          tags: "",
+          address: "",
+          reviews: [],
+          location: {},
+          userename: "",
+          upload: false
+        }
+      });
+      $("expanded-section").removeClass("expand-transition");
+      $("expanded-section").addClass("expand-leave");
       this.$router.push({
         path: "userfeed",
         query: { user: username }
@@ -119,7 +151,7 @@ export default {
             description: item.data.description,
             tags: item.data.tags,
             address: item.data.address,
-            map: item.data.map,
+            reviews: item.data.reviews,
             location: item.data.location,
             userename: item.data.username,
             upload: false
@@ -141,7 +173,7 @@ export default {
           description: "",
           tags: "",
           address: "",
-          map: "",
+          reviews: [],
           location: {},
           userename: "",
           upload: false

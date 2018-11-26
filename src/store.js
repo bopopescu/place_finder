@@ -38,6 +38,9 @@ export default new Vuex.Store({
 		distance: '',
 		duration: '',
 		reviewError: '',
+		reviewState: false,
+		currReviews: [],
+		averageRating: 0.0,
 	},
 	getters: {
 		user: state => state.user,
@@ -61,6 +64,8 @@ export default new Vuex.Store({
 		distance: state => state.distance,
 		duration: state => state.duration,
 		reviewError: state => state.reviewError,
+		currReviews: state => state.currReviews,
+		averageRating: state => state.averageRating,
 	},
 	mutations: {
 		setUser(state, user) {
@@ -110,6 +115,12 @@ export default new Vuex.Store({
 		},
 		setReviewError(state, error) {
 			state.reviewError = error;
+		},
+		setCurrReviews(state, reviews) {
+			state.currReviews = reviews;
+		},
+		setAverageRating(state, rating) {
+			state.averageRating = rating;
 		}
 	},
 	actions: {
@@ -309,7 +320,6 @@ export default new Vuex.Store({
 
 					db.collection('uploads').doc(info.id).get().then(doc => {
 						var reviews = doc.data().reviews;
-						console.log(doc.data());
 						if (reviews === undefined) {
 							reviews = [];
 						}
@@ -448,6 +458,13 @@ export default new Vuex.Store({
 		expandItemObject(context, object) {
 			context.commit('setReviewError', '');
 			context.commit('setExpandedItemObject', object);
+			context.commit('setCurrReviews', object.data.reviews);
+			var total = 0.0;
+			for (var i = 0; i < object.data.reviews.length; i++) {
+				total += object.data.reviews[i].rating;
+			}
+			var average = total / object.data.reviews.length;
+			context.commit('setAverageRating', average);
 			if (object.id === '') {
 				context.commit('setShowExpandedView', false);
 			} else {

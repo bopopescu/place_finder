@@ -3,11 +3,7 @@
     <div style="margin-top: 20px;" class="box">
       <img class="container" id="image" v-bind:src="content.data.image">
       <br>
-      <!-- <div class="content columns is-multiline">
-        <div class="column tag tagstyle is-narrow" v-for="tag in content.data.tags">
-          <a v-on:click="search(tag)" href="#">#{{tag}}</a>
-        </div>
-      </div> -->
+      <h3>{{ averageRating }} / 5 ({{ reviews.length }} reviews)</h3>
       <br>
       <h3>Description</h3>
       <br>
@@ -44,6 +40,23 @@
               <p style="color: red; margin-top: 15px;">{{ reviewError }}</p>
         </div>
       </transition>
+      <div style="margin: auto;">
+        <a style="font-size: 1.2em;" v-on:click="toggleSeeReviews">Reviews&nbsp&nbsp
+          <i class="fas fa-angle-down" v-if="!seeReviews"></i>
+          <i class="fas fa-angle-up" v-if="seeReviews"></i>
+        </a>
+      </div>
+      <transition name="exapnd">
+        <div id="reviews-section" v-if="seeReviews">
+          <div v-for="review in reviews">
+            <a style="font-size: 1.3em;" v-on:click="searchUser(review.user)">@{{ review.user }}</a>&nbsp&nbsp
+            <span style="font-size: 1.3em;">{{ review.rating }} / 5</span>
+            <br>
+            <em>{{ review.review }}</em>
+            <hr>
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -56,7 +69,8 @@ export default {
       leaveReview: false,
       review: "",
       starsClicked: false,
-      rating: 0.0
+      rating: 0.0,
+      seeReviews: false
     };
   },
   computed: {
@@ -77,10 +91,36 @@ export default {
     },
     reviewError: function() {
       return this.$store.getters.reviewError;
+    },
+    reviews: function() {
+      return this.$store.getters.currReviews;
+    },
+    averageRating: function() {
+      return this.$store.getters.averageRating;
     }
   },
   methods: {
-    search: function(tag) {
+    // search: function(tag) {
+    //   this.$store.dispatch("expandItemObject", {
+    //     id: "",
+    //     data: {
+    //       image: "",
+    //       imageName: "",
+    //       description: "",
+    //       tags: "",
+    //       address: "",
+    //       reviews: [],
+    //       location: {},
+    //       userename: "",
+    //       upload: false
+    //     }
+    //   });
+    //   this.$router.push({
+    //     path: "search",
+    //     query: { keywords: tag }
+    //   });
+    // },
+    searchUser: function(username) {
       this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
@@ -89,15 +129,15 @@ export default {
           description: "",
           tags: "",
           address: "",
-          map: "",
+          reviews: [],
           location: {},
           userename: "",
           upload: false
         }
       });
       this.$router.push({
-        path: "search",
-        query: { keywords: tag }
+        path: "userfeed",
+        query: { user: username }
       });
     },
     toggleLeaveReview: function() {
@@ -109,6 +149,16 @@ export default {
         $("review-section").addClass("expand-leave");
       }
       this.leaveReview = !this.leaveReview;
+    },
+    toggleSeeReviews: function() {
+      if (!this.seeReviews) {
+        $("reviews-section").removeClass("expand-leave");
+        $("#reviews-section").addClass("expand-transition");
+      } else {
+        $("#reviews-section").removeClass("expand-transition");
+        $("reviews-section").addClass("expand-leave");
+      }
+      this.seeReviews = !this.seeReviews;
     },
     addReview: function(itemId) {
       this.$store.dispatch("addReview", {
