@@ -37,10 +37,17 @@
             </div>
             </div>
             <div style="margin-top: 10px;" class="columns" v-if="content.data.image != '' || imageData != ''">
-              <div class="control column is-one-third">
-                <form v-on:submit.prevent="addTag(content.data.upload ? tags : contentTags)">
-                <input class="input" type="text" placeholder="Add tag..." v-model="tagInput">
-                </form>
+              <div class="field has-addons column is-half">
+                <div class="control">
+                  <form v-on:submit.prevent="addTag(content.data.upload ? tags : contentTags)">
+                  <input class="input" type="text" placeholder="Add tag..." v-model="tagInput">
+                  </form>
+                </div>
+                <div class="control">
+                  <a class="button is-primary" v-on:click="addTag(content.data.upload ? tags : contentTags)">
+                    <i class="fas fa-plus"></i>
+                  </a>
+                </div>
               </div>
               <div class="column message is-narrow" v-if="tagError">
                 <span style="color: red;">This tag already exists!</span>
@@ -221,7 +228,7 @@ export default {
         }
       }
       this.tagError = false;
-      tags.push(this.tagInput);
+      tags.push(this.tagInput.toLowerCase());
       this.tagInput = "";
     },
     deleteTag: function(tags, tag) {

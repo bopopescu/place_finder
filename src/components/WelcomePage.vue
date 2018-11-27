@@ -84,7 +84,7 @@
 					</div>
 		    </section>
 		    <footer class="modal-card-foot">
-		      <button class="button is-primary" v-bind:class="{ 'is-loading' : isLoading }" v-on:click="submitModal"><strong>Submit</strong></button>
+		      <button class="button is-primary" v-bind:class="{ 'is-loading' : isLoading }" v-on:click="submitModal"><strong>{{ modalTitle }}</strong></button>
 		      <button class="button" v-on:click="closeModal">Cancel</button>
 		    </footer>
 		  </div>
@@ -109,42 +109,33 @@ export default {
   },
   methods: {
     signup: function() {
-      if (
-        this.username.length == 0 ||
-        this.email.length == 0 ||
-        this.password.length == 0 ||
-        this.confirmPassword.length == 0
-      ) {
-        return;
-      } else {
-        this.$store
-          .dispatch("signup", {
-            username: this.username,
-            email: this.email,
-            password: this.password
-          })
-          .then(user => {
+      this.$store
+        .dispatch("signup", {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        })
+        .then(user => {
+          if (user !== undefined) {
             this.username = "";
             this.email = "";
             this.password = "";
             this.confirmPassword = "";
-          });
-      }
+          }
+        });
     },
     login: function() {
-      if (this.email.length == 0 || this.password.length == 0) {
-        return;
-      } else {
-        this.$store
-          .dispatch("login", {
-            email: this.email,
-            password: this.password
-          })
-          .then(user => {
+      this.$store
+        .dispatch("login", {
+          email: this.email,
+          password: this.password
+        })
+        .then(user => {
+          if (user !== undefined) {
             this.email = "";
             this.password = "";
-          });
-      }
+          }
+        });
     },
     displayModal: function(type) {
       this.signupMode = type === "Sign up";

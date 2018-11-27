@@ -145,16 +145,22 @@ export default new Vuex.Store({
 
 		// Registration, Login //
 		signup(context, user) {
+			if (user.email === "" || user.password === "") {
+				context.commit('setRegisterError', 'Please enter valid information.');
+				return;
+			}
 			context.commit('setIsLoading', true);
-			firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+
+			return firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
 				.then(response => {
 					context.commit('setRegisterError', '');
 					context.commit('setLoginError', '');
 
 					var u = firebase.auth().currentUser;
-					u.updateProfile({ displayName: user.username }).then(() => {
+					return u.updateProfile({ displayName: user.username }).then(() => {
 						context.commit('setUser', u);
 						context.commit('setShowModal', false);
+						return response;
 					}).catch((error) => {
 						console.log('Update User Error', error);
 					});
@@ -168,22 +174,26 @@ export default new Vuex.Store({
 		},
 
 		login(context, user) {
+			if (user.email === "" || user.password === "") {
+				context.commit('setLoginError', 'Please enter valid information.');
+				return;
+			}
 			context.commit('setIsLoading', true);
-			firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+			return firebase.auth().signInWithEmailAndPassword(user.email, user.password)
 				.then(response => {
 					context.commit('setRegisterError', '');
 					context.commit('setLoginError', '');
 
-					console.log(response['user']['uid']);
 					context.commit('setShowModal', false);
+					context.commit('setIsLoading', false);
+					return response;
 				})
 				.catch(error => {
 					console.log(error);
 					context.commit('setLoginError', error.message);
 					context.commit('setUser', null);
+					context.commit('setIsLoading', false);
 				});
-
-			context.commit('setIsLoading', false);
 		},
 
 		logout(context) {
@@ -238,6 +248,11 @@ export default new Vuex.Store({
 				var content = [];
 				querySnapshot.forEach((doc) => {
 					content.push({ id: doc.id, data: doc.data() });
+					if (context.getters.expandedItemObject !== {}) {
+						if (doc.id === context.getters.expandedItemObject.id) {
+							context.dispatch('expandItemObject', { id: doc.id, data: doc.data() });
+						}
+					}
 				});
 				context.commit('setAllContent', content);
 			});
@@ -323,17 +338,18 @@ export default new Vuex.Store({
 						if (reviews === undefined) {
 							reviews = [];
 						}
-						reviews.push({ user: user.displayName, review: info.review, rating: info.rating });
+						reviews.unshift({ user: user.displayName, review: info.review, rating: info.rating, created: moment().format("MMM Do YYYY") });
 						db.collection('uploads').doc(info.id).update({
 							reviews: reviews
-						}).then((docRef) => {
-							context.commit('setIsLoading', false);
-							context.commit('setReviewError', '');
-						}).catch((error) => {
-							context.commit('setIsLoading', false);
-							context.commit('setReviewError', 'An error occurred. Please try again.');
-							console.log(error);
-						});
+						})
+							.then(() => {
+								context.commit('setIsLoading', false);
+								context.commit('setReviewError', '');
+							}).catch((error) => {
+								context.commit('setIsLoading', false);
+								context.commit('setReviewError', 'An error occurred. Please try again.');
+								console.log(error);
+							});
 					}).catch(error => {
 						context.commit('setIsLoading', false);
 						context.commit('setReviewError', 'An error occurred. Please try again.');
@@ -364,29 +380,27 @@ export default new Vuex.Store({
 
 		doSearch(context, keywords) {
 			let strings = keywords.split(/,?\s+/);
+			var resultSet = new Set();
 			var results = [];
+			var allContent = context.getters.allContent;
 			for (var i = 0; i < strings.length; i++) {
-				db.collection("uploads").where("tags", "array-contains", strings[i]).get().then((querySnapshot) => {
-					querySnapshot.forEach((doc) => {
-						results.push({ id: doc.id, data: doc.data() });
-					});
-					for (var n = 0; n < strings.length; n++) {
-						for (var j = 0; j < context.getters.allContent.length; j++) {
-							if (context.getters.allContent[j].data.address.toLowerCase().includes(strings[n].toLowerCase())) {
-								var found = false;
-								for (var k = 0; k < results.length; k++) {
-									if (results[k].id === context.getters.allContent[j].id) {
-										found = true;
-									}
-								}
-								if (!found) {
-									results.push(context.getters.allContent[j]);
-								}
-							}
+				for (var j = 0; j < allContent.length; j++) {
+					for (var m = 0; m < allContent[j].data.tags.length; m++) {
+						if (allContent[j].data.tags[m].indexOf(strings[i].toLowerCase()) >= 0 ? true : false) {
+							resultSet.add(allContent[j]);
 						}
 					}
-				});
+					let locationStrings = allContent[j].data.address.toLowerCase().split(/,?\s+/);
+					for (var m = 0; m < locationStrings.length; m++) {
+						if (locationStrings[m].indexOf(strings[i].toLowerCase()) >= 0 ? true : false) {
+							resultSet.add(allContent[j]);
+						}
+					}
+				}
 			}
+			resultSet.forEach((value) => {
+				results.push(value);
+			});
 			context.commit('setSearchResults', results);
 		},
 
@@ -479,7 +493,7 @@ export default new Vuex.Store({
 				for (var i = 0; i < object.data.reviews.length; i++) {
 					total += object.data.reviews[i].rating;
 				}
-				var average = total / object.data.reviews.length;
+				var average = (total / object.data.reviews.length).toFixed(1);
 				context.commit('setAverageRating', average);
 			}
 			if (object.id === '') {

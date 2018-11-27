@@ -1,62 +1,60 @@
 <template>
-  <div class="container">
-    <div style="margin-top: 20px;" class="box">
-      <img class="container" id="image" v-bind:src="content.data.image">
-      <br>
-      <h3 v-if="reviews !== undefined">{{ averageRating }} / 5 ({{ reviews.length }} reviews)</h3>
-      <br>
-      <h3>Description</h3>
-      <br>
-      <span><em>{{ content.data.description }}</em></span>
-      <br>
-      <br>
-      <h4>{{ content.data.address }}</h4>
-      <br>
-      <img class="container" id="map" v-bind:src="mapUrl">
-      <br>
-      <div class="columns is-variable is-1">
-        <i class="fas fa-car fa-2x column is-narrow"></i>
-        <span class="column is-narrow" v-if="distance != ''">{{ distance }}&nbsp&nbsp|</span>
-        <span class="column" v-if="duration != ''">{{ duration }}</span>
-      </div>
-      <div style="margin-bottom: 15px;">
-        <a style="font-size: 1.2em;" v-on:click="toggleLeaveReview">Leave a review&nbsp&nbsp
-          <i class="fas fa-angle-down" v-if="!leaveReview"></i>
-          <i class="fas fa-angle-up" v-if="leaveReview"></i>
-        </a>
-      </div>
-      <transition name="expand">
-        <div id="review-section" class="control" v-if="leaveReview">
-          <div style="margin-bottom: 15px;" class="stars">
-            <a><i id="star1" class="fas fa-star" v-on:mouseover="starOneHover" v-on:click="starOneClick" v-on:mouseleave="hoverLeave"></i></a>
-            <a><i id="star2" class="fas fa-star" v-on:mouseover="starTwoHover" v-on:click="starTwoClick" v-on:mouseleave="hoverLeave"></i></a>
-            <a><i id="star3" class="fas fa-star" v-on:mouseover="starThreeHover" v-on:click="starThreeClick" v-on:mouseleave="hoverLeave"></i></a>
-            <a><i id="star4" class="fas fa-star" v-on:mouseover="starFourHover" v-on:click="starFourClick" v-on:mouseleave="hoverLeave"></i></a>
-            <a><i id="star5" class="fas fa-star" v-on:mouseover="starFiveHover" v-on:click="starFiveClick" v-on:mouseleave="hoverLeave"></i></a>
-            <span style="margin-left: 15px;">{{ this.rating }}</span>
-          </div>
-          <textarea class="textarea has-fixed-size" placeholder="Review..." v-model="review"></textarea>
-              <a style="margin-top: 15px;" class="button is-primary" v-bind:class="{ 'is-loading': isLoading }" v-on:click="addReview(content.id)">Submit</a>
-              <p style="color: red; margin-top: 15px;">{{ reviewError }}</p>
+  <div class="container" style="display: flex;">
+    <div>
+      <div style="margin-top: 20px;" class="box">
+        <img class="container" id="image" v-bind:src="content.data.image">
+        <br>
+        <h3 v-if="reviews !== undefined">{{ averageRating }} / 5 ({{ reviews.length }} reviews)</h3>
+        <br>
+        <h3>Description</h3>
+        <br>
+        <span><em>{{ content.data.description }}</em></span>
+        <br>
+        <br>
+        <h4>{{ content.data.address }}</h4>
+        <br>
+        <img class="container" id="map" v-bind:src="mapUrl">
+        <br>
+        <div class="columns is-variable is-1">
+          <i class="fas fa-car fa-2x column is-narrow"></i>
+          <span class="column is-narrow" v-if="distance != ''">{{ distance }}&nbsp&nbsp|</span>
+          <span class="column" v-if="duration != ''">{{ duration }}</span>
         </div>
-      </transition>
-      <div style="margin: auto;">
-        <a style="font-size: 1.2em;" v-on:click="toggleSeeReviews">Reviews&nbsp&nbsp
-          <i class="fas fa-angle-down" v-if="!seeReviews"></i>
-          <i class="fas fa-angle-up" v-if="seeReviews"></i>
-        </a>
-      </div>
-      <transition name="exapnd">
-        <div id="reviews-section" v-if="seeReviews">
-          <div v-for="review in reviews">
-            <a style="font-size: 1.3em;" v-on:click="searchUser(review.user)">@{{ review.user }}</a>&nbsp&nbsp
-            <span style="font-size: 1.3em;">{{ review.rating }} / 5</span>
-            <br>
-            <em>{{ review.review }}</em>
-            <hr>
-          </div>
+        <div style="margin-bottom: 15px;">
+          <a style="font-size: 1.2em;" v-on:click="toggleSeeReviews">Reviews&nbsp&nbsp
+            <i class="fas fa-angle-down" v-if="!seeReviews"></i>
+            <i class="fas fa-angle-up" v-if="seeReviews"></i>
+          </a>
         </div>
-      </transition>
+        <transition name="expand">
+          <div id="review-section" class="control" v-if="seeReviews">
+            <div style="margin-bottom: 15px;" class="stars">
+              <a><i id="star1" class="fas fa-star" v-on:mouseover="starOneHover" v-on:click="starOneClick" v-on:mouseleave="hoverLeave"></i></a>
+              <a><i id="star2" class="fas fa-star" v-on:mouseover="starTwoHover" v-on:click="starTwoClick" v-on:mouseleave="hoverLeave"></i></a>
+              <a><i id="star3" class="fas fa-star" v-on:mouseover="starThreeHover" v-on:click="starThreeClick" v-on:mouseleave="hoverLeave"></i></a>
+              <a><i id="star4" class="fas fa-star" v-on:mouseover="starFourHover" v-on:click="starFourClick" v-on:mouseleave="hoverLeave"></i></a>
+              <a><i id="star5" class="fas fa-star" v-on:mouseover="starFiveHover" v-on:click="starFiveClick" v-on:mouseleave="hoverLeave"></i></a>
+              <span style="margin-left: 15px;">{{ this.rating }}</span>
+            </div>
+            <textarea class="textarea has-fixed-size" placeholder="Review..." v-model="review"></textarea>
+                <a style="margin-top: 15px;" class="button is-primary" v-bind:class="{ 'is-loading': isLoading }" v-on:click="addReview(content.id)">Submit</a>
+                <p style="color: red; margin-top: 15px;">{{ reviewError }}</p>
+          </div>
+        </transition>
+        <transition name="exapnd">
+          <div id="reviews-section" v-if="seeReviews">
+            <div v-for="review in reviews">
+              <a style="font-size: 1.3em;" v-on:click="searchUser(review.user)">@{{ review.user }}</a>&nbsp&nbsp
+              <span style="font-size: 1.3em;"><strong>{{ review.rating }} / 5</strong></span>&nbsp&nbsp
+              <span style="font-size: 1.1em;">{{ review.created }}</span>
+              <br>
+              <em>{{ review.review }}</em>
+              <hr>
+            </div>
+          </div>
+        </transition>
+        
+      </div>
     </div>
   </div>
 </template>
@@ -66,7 +64,6 @@ export default {
   name: "ExpandedItemView",
   data() {
     return {
-      leaveReview: false,
       review: "",
       starsClicked: false,
       rating: 0.0,
@@ -100,26 +97,6 @@ export default {
     }
   },
   methods: {
-    // search: function(tag) {
-    //   this.$store.dispatch("expandItemObject", {
-    //     id: "",
-    //     data: {
-    //       image: "",
-    //       imageName: "",
-    //       description: "",
-    //       tags: "",
-    //       address: "",
-    //       reviews: [],
-    //       location: {},
-    //       userename: "",
-    //       upload: false
-    //     }
-    //   });
-    //   this.$router.push({
-    //     path: "search",
-    //     query: { keywords: tag }
-    //   });
-    // },
     searchUser: function(username) {
       this.$store.dispatch("expandItemObject", {
         id: "",
@@ -161,11 +138,25 @@ export default {
       this.seeReviews = !this.seeReviews;
     },
     addReview: function(itemId) {
-      this.$store.dispatch("addReview", {
-        id: itemId,
-        review: this.review,
-        rating: this.rating
-      });
+      this.$store
+        .dispatch("addReview", {
+          id: itemId,
+          review: this.review,
+          rating: this.rating
+        })
+        .then(() => {
+          if (
+            this.$store.getters.reviewError !==
+              "An error occurred. Please try again." ||
+            this.$store.getters.reviewError !==
+              "You must be logged in to leave a review"
+          ) {
+            this.rating = 0.0;
+            this.review = "";
+            this.starsClicked = false;
+            this.hoverLeave();
+          }
+        });
     },
     starOneHover: function() {
       if (!this.starsClicked) {
@@ -270,8 +261,8 @@ h4 {
 }
 
 #image {
-  max-width: 1280px;
-  max-height: 700px;
+  max-width: 800px;
+  max-height: 500px;
   display: flex;
 }
 

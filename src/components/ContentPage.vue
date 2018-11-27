@@ -7,10 +7,10 @@
     <section>
       <div class="columns is-multiline">
         <div class="column is-one-quarter" v-for="item in content">
-          <div class="card">
+          <a v-on:click="info(item)"><div class="card">
             <div class="card-image">
               <figure class="image is-3by2">
-                <a v-on:click="togglePic(item.data.image)"><img v-bind:src="item.data.image" alt="Loading..."></a>
+                <a><img v-bind:src="item.data.image" alt="Loading..."></a> <!--v-on:click="togglePic(item.data.image)"-->
               </figure>
             </div>
 
@@ -28,26 +28,25 @@
               <div class="media">
                 <div class="media-content">
                   <p class="title is-4">{{ item.data.username }}</p>
-                  <p class="subtitle is-6"><a v-on:click="searchUser(item.data.username)">@{{ item.data.username }}</a></p>
+                  <p class="subtitle is-6"><a v-on:click.stop="searchUser(item.data.username)">@{{ item.data.username }}</a></p>
                 </div>
                 <div v-if="$route.fullPath == '/user'">
-                  <a v-on:click="edit(item)"><i class="fas fa-edit fa-2x"></i></a>
-                  <a class="delete is-large" v-on:click="del(item)"></a>
+                  <a v-on:click.stop="edit(item)"><i class="fas fa-edit fa-2x"></i></a>
+                  <a class="delete is-large" v-on:click.stop="del(item)"></a>
                 </div>
               </div>
               <span id="description">{{ item.data.description }}</span>
               <div class="content columns is-multiline">
                 <div class="column tag tagstyle is-narrow" v-for="tag in item.data.tags">
-                  <a v-on:click="search(tag)" href="#">#{{tag}}</a>
+                  <a v-on:click.stop="search(tag)" href="#">#{{tag}}</a>
                 </div>
               </div>
                 <br>
                 <span><em>{{ item.data.address }}</em></span>
                 <br>
                 <time>Added: {{ item.data.created }}</time>
-                <a v-if="$route.fullPath != '/user'" v-on:click="info(item)"><i class="fas fa-info"></i></a>
             </div>
-          </div>
+          </div></a>
         </div>
       </div>
     </section>
@@ -142,6 +141,9 @@ export default {
       this.image = image;
     },
     info: function(item) {
+      if (this.$route.fullPath === "/user") {
+        return;
+      }
       this.$store
         .dispatch("expandItemObject", {
           id: item.id,
