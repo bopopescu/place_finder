@@ -2,12 +2,19 @@
   <div class="container" style="display: flex;">
     <div>
       <div style="margin-top: 20px;" class="box">
-        <img class="container" id="image" v-bind:src="content.data.image">
+        <div style="position: relative">
+          <img class="container" id="image" v-bind:src="content.data.images[currImageIndex]">
+          <a v-on:click="rightArrowClick" v-if="content.data.images.length > 1"><i class="far fa-arrow-alt-circle-right fa-3x right-arrow"></i></a>
+          <a v-on:click="leftArrowClick" v-if="content.data.images.length > 1"><i class="far fa-arrow-alt-circle-left fa-3x left-arrow"></i></a>
+        </div>
+        <span style="float: right; font-size: 1.1em;" v-if="content.data.images.length> 1">{{ currImageIndex + 1 }} / {{ content.data.images.length }}</span>
+
         <br>
         <h3 v-if="reviews !== undefined">{{ averageRating }} / 5 ({{ reviews.length }} reviews)</h3>
         <br>
         <h3>Description</h3>
         <br>
+        <span v-if="content.data.description == ''"><em>No description.</em></span>
         <span><em>{{ content.data.description }}</em></span>
         <br>
         <br>
@@ -67,7 +74,8 @@ export default {
       review: "",
       starsClicked: false,
       rating: 0.0,
-      seeReviews: false
+      seeReviews: false,
+      currImageIndex: 0
     };
   },
   computed: {
@@ -101,8 +109,7 @@ export default {
       this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
-          image: "",
-          imageName: "",
+          images: [],
           description: "",
           tags: "",
           address: "",
@@ -116,6 +123,20 @@ export default {
         path: "userfeed",
         query: { user: username }
       });
+    },
+    leftArrowClick: function() {
+      if (this.currImageIndex == 0) {
+        this.currImageIndex = this.content.data.images.length - 1;
+      } else {
+        this.currImageIndex--;
+      }
+    },
+    rightArrowClick: function() {
+      if (this.currImageIndex == this.content.data.images.length - 1) {
+        this.currImageIndex = 0;
+      } else {
+        this.currImageIndex++;
+      }
     },
     toggleLeaveReview: function() {
       if (!this.leaveReview) {
@@ -283,6 +304,24 @@ h4 {
 
 .highlighted {
   color: yellow;
+}
+
+.right-arrow {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 45%;
+  margin-right: 15px;
+  color: rgba(51, 51, 51, 0.6);
+}
+
+.left-arrow {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 45%;
+  margin-left: 15px;
+  color: rgba(51, 51, 51, 0.6);
 }
 </style>
 

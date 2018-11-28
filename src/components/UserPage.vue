@@ -33,8 +33,7 @@ export default {
       this.$store.dispatch("modalObject", {
         id: "",
         data: {
-          image: "",
-          imageName: "",
+          images: [],
           description: "",
           tags: [],
           userename: "",

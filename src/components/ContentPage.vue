@@ -10,11 +10,11 @@
           <a v-on:click="info(item)"><div class="card">
             <div class="card-image">
               <figure class="image is-3by2">
-                <a><img v-bind:src="item.data.image" alt="Loading..."></a> <!--v-on:click="togglePic(item.data.image)"-->
+                <a><img v-bind:src="item.data.images[0]" alt="Loading..."></a> <!--v-on:click="togglePic(item.data.image)"-->
               </figure>
             </div>
 
-            <div class="modal" v-bind:class="{ 'is-active': showPic }">
+            <!-- <div class="modal" v-bind:class="{ 'is-active': showPic }">
               <div class="modal-background"></div>
               <div class="modal-content">
                 <p class="image is-4by3">
@@ -22,7 +22,7 @@
                 </p>
               </div>
               <button class="modal-close is-large" aria-label="close" v-on:click="togglePic"></button>
-            </div>
+            </div> -->
 
             <div class="card-content">
               <div class="media">
@@ -63,8 +63,8 @@ export default {
   props: ["content"],
   data() {
     return {
-      showPic: false,
-      image: ""
+      // showPic: false,
+      // image: ""
     };
   },
   computed: {
@@ -77,8 +77,7 @@ export default {
       this.$store.dispatch("modalObject", {
         id: item.id,
         data: {
-          image: item.data.image,
-          imageName: item.data.imageName,
+          images: item.data.images,
           description: item.data.description,
           tags: item.data.tags,
           address: item.data.address,
@@ -96,8 +95,7 @@ export default {
       this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
-          image: "",
-          imageName: "",
+          images: [],
           description: "",
           tags: "",
           address: "",
@@ -118,8 +116,7 @@ export default {
       this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
-          image: "",
-          imageName: "",
+          images: [],
           description: "",
           tags: "",
           address: "",
@@ -148,8 +145,8 @@ export default {
         .dispatch("expandItemObject", {
           id: item.id,
           data: {
-            image: item.data.image,
-            imageName: item.data.imageName,
+            images: item.data.images,
+            // imageName: item.data.imageName,
             description: item.data.description,
             tags: item.data.tags,
             address: item.data.address,
@@ -170,8 +167,8 @@ export default {
       this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
-          image: "",
-          imageName: "",
+          images: [],
+          // imageName: "",
           description: "",
           tags: "",
           address: "",

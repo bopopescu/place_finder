@@ -211,34 +211,42 @@ export default new Vuex.Store({
 
 			firebase.auth().onAuthStateChanged((user) => {
 				if (user) {
+					console.log(upload.images);
+					var images = [];
 					var storage = firebase.storage().ref();
-					var task = storage.child('images/' + upload.imageName).put(upload.image);
-					task.on('state_changed', function (snapshot) {
-						var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-					}, function (error) {
+					for (var i = 0; i < upload.images.length; i++) {
+						var imageName = upload.images[i].imageName;
+						let task = storage.child('images/' + imageName).put(upload.images[i].image);
+						task.on('state_changed', function (snapshot) {
+							var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+						}, function (error) {
 
-					}, function () {
-						task.snapshot.ref.getDownloadURL().then((downloadUrl) => {
-							db.collection('uploads').add({
-								description: upload.description,
-								image: downloadUrl,
-								imageName: upload.imageName,
-								tags: upload.tags,
-								address: upload.address,
-								location: upload.location,
-								username: user.displayName,
-								created: moment().format("MMM Do YYYY")
-							}).then(function (docRef) {
-								context.commit('setIsLoading', false);
-								context.commit('setShowModal', false);
-								context.dispatch('getAllUploads');
-							}).catch(function (error) {
-								context.commit('setIsLoading', false);
-								console.log("Error uploading: ", error);
-								context.commit('setUploadMessage', { message: 'Upload unsuccessful. Please try again.', messageColor: 'red' });
+						}, function () {
+							task.snapshot.ref.getDownloadURL().then((downloadUrl) => {
+								console.log(downloadUrl);
+								images.push(downloadUrl);
+								if (images.length == upload.images.length) {
+									db.collection('uploads').add({
+										description: upload.description,
+										images: images,
+										tags: upload.tags,
+										address: upload.address,
+										location: upload.location,
+										username: user.displayName,
+										created: moment().format("MMM Do YYYY")
+									}).then(function (docRef) {
+										context.commit('setIsLoading', false);
+										context.commit('setShowModal', false);
+										context.dispatch('getAllUploads');
+									}).catch(function (error) {
+										context.commit('setIsLoading', false);
+										console.log("Error uploading: ", error);
+										context.commit('setUploadMessage', { message: 'Upload unsuccessful. Please try again.', messageColor: 'red' });
+									});
+								}
 							});
 						});
-					});
+					}
 				}
 			});
 		},
@@ -254,6 +262,7 @@ export default new Vuex.Store({
 						}
 					}
 				});
+				console.log(content);
 				context.commit('setAllContent', content);
 			});
 		},
@@ -277,41 +286,54 @@ export default new Vuex.Store({
 
 			firebase.auth().onAuthStateChanged((user) => {
 				if (user) {
-					if (upload.image instanceof Blob) {
-						var storage = firebase.storage().ref();
-						var task = storage.child('images/' + upload.imageName).put(upload.image);
-						task.on('state_changed', function (snapshot) {
+					var images = [];
+					var uploadImages = [];
+					var allImages = [];
+					upload.images.forEach(value => {
+						allImages.push(value);
+					});
+					for (var i = 0; i < allImages.length; i++) {
+						if (!(allImages[i].image instanceof Blob)) {
+							images.push(allImages[i].image);
+						} else {
+							uploadImages.push(allImages[i]);
+						}
+					}
 
-						}, function (error) {
+					if (images.length !== allImages.length) {
+						for (var i = 0; i < uploadImages.length; i++) {
+							var storage = firebase.storage().ref();
+							var task = storage.child('images/' + uploadImages[i].imageName).put(uploadImages[i].image);
+							task.on('state_changed', function (snapshot) {
 
-						}, function () {
-							task.snapshot.ref.getDownloadURL().then((downloadUrl) => {
-								db.collection('uploads').doc(upload.id).update({
-									description: upload.description,
-									image: downloadUrl,
-									imageName: upload.imageName,
-									tags: upload.tags,
-									address: upload.address,
-									location: upload.location
-								}).then(function (docRef) {
-									context.commit('setIsLoading', false);
-									context.commit('setShowModal', false);
-									storage.child('images/' + upload.oldImageName).delete().then(function () {
-										console.log("old image deleted successfully");
-									}).catch(function (error) {
-										console.log("old image not deleted successfully: ", error);
-									});
-								}).catch(function (error) {
-									context.commit('setIsLoading', false);
-									console.log("Error uploading: ", error);
-									context.commit('setUploadMessage', { message: 'Update unsuccessful. Please try again.', messageColor: 'red' });
+							}, function (error) {
+
+							}, function () {
+								task.snapshot.ref.getDownloadURL().then((downloadUrl) => {
+									images.push(downloadUrl);
+									if (images.length === allImages.length) {
+										db.collection('uploads').doc(upload.id).update({
+											description: upload.description,
+											images: images,
+											tags: upload.tags,
+											address: upload.address,
+											location: upload.location
+										}).then(function (docRef) {
+											context.commit('setIsLoading', false);
+											context.commit('setShowModal', false);
+										}).catch(function (error) {
+											context.commit('setIsLoading', false);
+											console.log("Error uploading: ", error);
+											context.commit('setUploadMessage', { message: 'Update unsuccessful. Please try again.', messageColor: 'red' });
+										});
+									}
 								});
 							});
-						});
+						}
 					} else {
 						db.collection('uploads').doc(upload.id).update({
+							images: images,
 							description: upload.description,
-							imageName: upload.imageName,
 							tags: upload.tags,
 							address: upload.address,
 							location: upload.location
@@ -324,6 +346,60 @@ export default new Vuex.Store({
 							context.commit('setUploadMessage', { message: 'Update unsuccessful. Please try again.', messageColor: 'red' });
 						});
 					}
+
+
+					// for (var i = 0; i < upload.images.length; i++) {
+					// 	if (upload.images[i].image instanceof Blob) {
+					// 		var storage = firebase.storage().ref();
+					// 		var task = storage.child('images/' + upload.images[i].imageName).put(upload.images[i].image);
+					// 		task.on('state_changed', function (snapshot) {
+
+					// 		}, function (error) {
+
+					// 		}, function () {
+					// 			task.snapshot.ref.getDownloadURL().then((downloadUrl) => {
+					// 				images.push(downloadUrl);
+					// 				if (images.length === upload.images.length) {
+					// 					db.collection('uploads').doc(upload.id).update({
+					// 						description: upload.description,
+					// 						images: images,
+					// 						tags: upload.tags,
+					// 						address: upload.address,
+					// 						location: upload.location
+					// 					}).then(function (docRef) {
+					// 						context.commit('setIsLoading', false);
+					// 						context.commit('setShowModal', false);
+					// 					}).catch(function (error) {
+					// 						context.commit('setIsLoading', false);
+					// 						console.log("Error uploading: ", error);
+					// 						context.commit('setUploadMessage', { message: 'Update unsuccessful. Please try again.', messageColor: 'red' });
+					// 					});
+					// 				}
+					// 			});
+					// 		});
+					// 	} else {
+					// 		if (!(upload.images[i].image instanceof Blob)) {
+					// 			images.push(upload.images[i].image);
+					// 		}
+					// 		if (images.length === upload.images.length) {
+					// 			console.log(images);
+					// db.collection('uploads').doc(upload.id).update({
+					// 	images: images,
+					// 	description: upload.description,
+					// 	tags: upload.tags,
+					// 	address: upload.address,
+					// 	location: upload.location
+					// }).then(function (docRef) {
+					// 	context.commit('setIsLoading', false);
+					// 	context.commit('setShowModal', false);
+					// }).catch(function (error) {
+					// 	context.commit('setIsLoading', false);
+					// 	console.log("Error uploading: ", error);
+					// 	context.commit('setUploadMessage', { message: 'Update unsuccessful. Please try again.', messageColor: 'red' });
+					// });
+					// 		}
+					// 	}
+					// }
 				}
 			});
 		},
@@ -366,11 +442,11 @@ export default new Vuex.Store({
 				if (user) {
 					db.collection('uploads').doc(item.id).delete().then(function () {
 						console.log("delete successful");
-						firebase.storage().ref().child('images/' + item.data.imageName).delete().then(function () {
-							console.log("image deleted successfully");
-						}).catch(function (error) {
-							console.log("image not deleted successfully: ", error);
-						});
+						// firebase.storage().ref().child('images/' + item.data.imageName).delete().then(function () {
+						// 	console.log("image deleted successfully");
+						// }).catch(function (error) {
+						// 	console.log("image not deleted successfully: ", error);
+						// });
 					}).catch(function (error) {
 						console.log("delete unsuccessful");
 					});

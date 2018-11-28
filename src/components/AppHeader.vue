@@ -139,8 +139,8 @@ export default {
       this.$store.dispatch("modalObject", {
         id: "",
         data: {
-          image: "",
-          imageName: "",
+          images: [],
+          // imageName: "",
           description: "",
           tags: [],
           userename: "",
@@ -153,8 +153,8 @@ export default {
       this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
-          image: "",
-          imageName: "",
+          images: [],
+          // imageName: "",
           description: "",
           tags: "",
           address: "",
