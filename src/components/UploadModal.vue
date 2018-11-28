@@ -141,7 +141,7 @@
                 </div>
               </div> -->
 
-              <div class="columns" v-if="images.length > 1">
+              <div style="margin-bottom: -15px;" class="columns" v-if="images.length > 1">
                 <form class="column is-full" v-on:submit.prevent="codeAddress">
                   <div class="field has-addons" v-bind:class="{ 'is-loading': mapLoading }">
                     <div class="control is-expanded">
@@ -149,12 +149,13 @@
                     </div>
                     <div class="control">
                       <a class="button is-primary" v-on:click="codeAddress">
-                        Search
+                        Validate Address
                       </a>
                     </div>
                   </div>
                 </form>
               </div>
+              <p style="margin-top: 10px;" v-bind:style="{ color: addressFormatErrorColor }">{{ addressFormatMessage }}</p>
 
               <!-- <div style="margin-top: 10px;" class="columns" v-if="content.data.image != '' || imageData != ''">
                 <form class="column is-full" v-on:submit.prevent="codeAddress">
@@ -172,7 +173,7 @@
                 </form>
               </div> -->
 
-              <div class="columns" v-if="images.length > 1">
+              <div style="margin-top: 15px;" class="columns" v-if="images.length > 1">
                 <div class="column is-narrow">
                   <button class="button is-primary" v-bind:class="{ 'is-loading': isLoading }" v-if="images.length > 1">{{ content.data.upload ? 'Upload' : 'Update' }}</button>
                 </div>
@@ -217,6 +218,9 @@ export default {
       description: "",
       tags: [],
       address: "",
+      addressFormatSuccess: false,
+      addressFormatErrorColor: "green",
+      addressFormatMessage: "",
       mapLoading: false,
       placeLat: 0.0,
       placeLng: 0.0,
@@ -266,6 +270,10 @@ export default {
       if (this.content.data.location !== undefined) {
         this.placeLat = this.content.data.location.lat;
         this.placeLng = this.content.data.location.lng;
+
+        this.addressFormatSuccess = true;
+        this.addressFormatErrorColor = "green";
+        this.addressFormatMessage = "";
       }
       // this.contentImage = this.content.data.image;
       // this.contentImageName = this.content.data.imageName;
@@ -303,6 +311,7 @@ export default {
       if (input.files && input.files[0]) {
         // this.file = input.files[0];
         var file = input.files[0];
+        console.log(file);
         // this.fileName = this.file.name;
         this.images[index].imageName = file.name;
 
@@ -351,6 +360,10 @@ export default {
         fileMessage: "Choose an image..."
       };
       this.address = "";
+      this.addressFormatSuccess = false;
+      this.addressFormatErrorColor = "red";
+      this.addressFormatMessage = "";
+      this.address;
       this.mapLoading = false;
       this.placeLat = 0.0;
       this.placeLng = 0.0;
@@ -393,6 +406,11 @@ export default {
       }
     },
     upload: function(id) {
+      if (!this.addressFormatSuccess) {
+        this.addressFormatMessage = "Please validate this address.";
+        this.addressFormatErrorColor = "red";
+        return;
+      }
       if (id !== "") {
         this.update(id);
         return;
@@ -533,8 +551,14 @@ export default {
             this.placeLat = json[0]["geometry"]["location"]["lat"];
             this.placeLng = json[0]["geometry"]["location"]["lng"];
             this.mapLoading = false;
+            this.addressFormatSuccess = true;
+            this.addressFormatMessage = "You're good to go!";
+            this.addressFormatErrorColor = "green";
           } else {
             this.mapLoading = false;
+            this.addressFormatSuccess = false;
+            this.addressFormatErrorColor = "red";
+            this.addressFormatMessage = "Please validate this address again.";
             console.log(err);
           }
         }

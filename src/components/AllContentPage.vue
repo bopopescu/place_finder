@@ -15,7 +15,7 @@ export default {
       return this.$store.getters.allContent;
     }
   },
-  created: function() {
+  mounted: function() {
     this.$store.dispatch("getAllUploads");
   }
 };
