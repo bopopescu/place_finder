@@ -17,6 +17,8 @@ import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import moment from 'moment';
 
+import router from '@/router';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -132,11 +134,11 @@ export default new Vuex.Store({
 			context.commit('setShowModal', false);
 			context.commit('setUploadMessage', {});
 			context.commit('setShowExpandedView', false);
-			let token = localStorage.getItem('token');
 			firebase.auth().onAuthStateChanged((user) => {
 				if (user) {
 					context.commit('setUser', user);
 					console.log(user);
+					router.push({ path: '/content' });
 				} else {
 					context.commit('setUser', null);
 				}
