@@ -17,9 +17,9 @@
 	    </a>
 	  </div>
 
-    <router-link v-bind:class="{ active: $route.fullPath === '/content' }" to="/content" class="navbar-item navbar-end navbar-text">
-	    All Content
-	  </router-link>
+      <!-- <router-link v-bind:class="{ active: $route.fullPath === '/content' }" to="/content" class="navbar-item navbar-end navbar-text">
+        All Content
+      </router-link> -->
 
 	  <div id="navbarBasicExample" class="navbar-menu">
 	    <div class="navbar-start">
@@ -35,7 +35,11 @@
 			<div class="navbar-item">
 				<div style="color: red;" v-if="loginError != ''">{{ loginError }}</div>
 			</div>
+
 			<div class="navbar-end" v-if="!loggedIn">
+        <router-link v-bind:class="{ active: $route.fullPath === '/content' }" to="/content" class="navbar-item navbar-end navbar-text">
+          All Destinations
+        </router-link>
         <div class="field navbar-item inputfield">
           <p class="control has-icons-left">
             <input class="input" type="email" placeholder="Email" v-model="email" v-on:keyup.enter="login">
@@ -60,11 +64,14 @@
 			</div>
       <div v-else class="navbar-end">
         <a v-on:click="displayModal"><i class="fas fa-plus navbar-item fa-2x"></i></a>
+        <router-link v-bind:class="{ active: $route.fullPath === '/content' }" to="/content" class="navbar-item navbar-end navbar-text">
+          All Content
+        </router-link>
         <router-link v-bind:class="{ active: $route.fullPath === '/user' }" to="/user" class="navbar-item navbar-text">
-          <a style="color: black;" v-on:click="clearItemObject">Manage Uploads</a>
+          <a style="color: black;" v-on:click="clearItemObject">Manage Destinations</a>
         </router-link>
         <a class="navbar-item navbar-text" v-on:click="logout">
-          Logout
+          <i style="margin-right: 5px;" class="fas fa-sign-out-alt"></i>Logout
         </a>
       </div>
 	 	</div>

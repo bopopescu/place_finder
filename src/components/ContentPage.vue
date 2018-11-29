@@ -2,15 +2,15 @@
   <div>
     <a style="float: left; margin-top: 30px; margin-left: 75px;" v-on:click="back" v-if="showExpandedView"><i class="fas fa-arrow-left fa-2x"></i></a>
     <transition id="expanded-section" name="expand">
-        <expanded-item-view v-if="showExpandedView" v-bind:class="{ 'expand-transition' : showExpandedView }"/>
+        <expanded-item-view id="top" v-if="showExpandedView" v-bind:class="{ 'expand-transition' : showExpandedView }"/>
     </transition>
     <section>
       <div class="columns is-multiline">
         <div class="column is-one-quarter" v-for="item in content">
-          <a v-on:click="info(item)"><div class="card">
+          <a href="#top" v-on:click="info(item)"><div class="card">
             <div class="card-image">
               <figure class="image is-3by2">
-                <a><img v-bind:src="item.data.images[0]" alt="Loading..."></a> <!--v-on:click="togglePic(item.data.image)"-->
+                <a><img v-bind:src="item.data.images[0]" alt="Loading..."></a>
               </figure>
             </div>
 

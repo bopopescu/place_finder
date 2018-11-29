@@ -3,11 +3,26 @@
     <div>
       <div style="margin-top: 20px;" class="box">
         <div style="position: relative">
-          <img class="container" id="image" v-bind:src="content.data.images[currImageIndex]">
+          <a><img class="container" id="image" v-bind:src="content.data.images[currImageIndex]" v-on:click="toggleModal"></a>
           <a v-on:click="rightArrowClick" v-if="content.data.images.length > 1"><i class="far fa-arrow-alt-circle-right fa-3x right-arrow"></i></a>
           <a v-on:click="leftArrowClick" v-if="content.data.images.length > 1"><i class="far fa-arrow-alt-circle-left fa-3x left-arrow"></i></a>
         </div>
-        <span style="float: right; font-size: 1.1em;" v-if="content.data.images.length> 1">{{ currImageIndex + 1 }} / {{ content.data.images.length }}</span>
+        <span style="float: right; font-size: 1.1em;" v-if="content.data.images.length > 1">{{ currImageIndex + 1 }} / {{ content.data.images.length }}</span>
+
+
+        <div class="modal" v-bind:class="{ 'is-active': showImageModal }">
+          <div class="modal-background" v-on:click="toggleModal">
+            <a v-on:click.stop="rightArrowClick" v-if="content.data.images.length > 1"><i class="far fa-arrow-alt-circle-right fa-3x right-arrow-modal"></i></a>
+            <a v-on:click.stop="leftArrowClick" v-if="content.data.images.length > 1"><i class="far fa-arrow-alt-circle-left fa-3x left-arrow-modal"></i></a>
+          </div>
+          <div class="modal-image">
+            <p class="image">
+              <img v-bind:src="content.data.images[currImageIndex]">
+            </p>
+          </div>
+          <button class="modal-close is-large" aria-label="close" v-on:click="toggleModal"></button>
+        </div>
+
 
         <br>
         <h3 v-if="reviews !== undefined">{{ averageRating }} / 5 ({{ reviews.length }} reviews)</h3>
@@ -75,7 +90,8 @@ export default {
       starsClicked: false,
       rating: 0.0,
       seeReviews: false,
-      currImageIndex: 0
+      currImageIndex: 0,
+      showImageModal: false
     };
   },
   computed: {
@@ -137,6 +153,9 @@ export default {
       } else {
         this.currImageIndex++;
       }
+    },
+    toggleModal: function() {
+      this.showImageModal = !this.showImageModal;
     },
     toggleLeaveReview: function() {
       if (!this.leaveReview) {
@@ -282,8 +301,7 @@ h4 {
 }
 
 #image {
-  max-width: 800px;
-  max-height: 500px;
+  max-width: 600px;
   display: flex;
 }
 
@@ -315,6 +333,20 @@ h4 {
   color: rgba(51, 51, 51, 0.6);
 }
 
+.right-arrow:hover,
+.right-arrow-modal:hover {
+  color: blue;
+}
+
+.right-arrow-modal {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 45%;
+  margin-right: 15px;
+  color: white;
+}
+
 .left-arrow {
   position: absolute;
   z-index: 1;
@@ -322,6 +354,20 @@ h4 {
   top: 45%;
   margin-left: 15px;
   color: rgba(51, 51, 51, 0.6);
+}
+
+.left-arrow:hover,
+.left-arrow-modal:hover {
+  color: blue;
+}
+
+.left-arrow-modal {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 45%;
+  margin-left: 15px;
+  color: white;
 }
 </style>
 

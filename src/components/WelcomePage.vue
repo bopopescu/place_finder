@@ -70,14 +70,6 @@
 					    </span>
 					  </p>
 					</div>
-					<div class="field" v-if="signupMode" style="padding-top: 20px;">
-					  <p class="control has-icons-left">
-					    <input class="input" type="password" placeholder="Confirm Password" v-model="confirmPassword">
-					    <span class="icon is-small is-left">
-					      <i class="fas fa-lock"></i>
-					    </span>
-					  </p>
-					</div>
 					<div v-if="(signupMode && registerError != '') || (!signupMode && loginError != '')">
 						<p style="color: red;" v-if="registerError != ''">{{ registerError }}</p>
 						<p style="color: red;" v-else-if="loginError != ''">{{ loginError}}</p>
@@ -103,8 +95,7 @@ export default {
       email: "",
       password: "",
       modalTitle: "",
-      signupMode: false,
-      confirmPassword: ""
+      signupMode: false
     };
   },
   methods: {
@@ -120,7 +111,6 @@ export default {
             this.username = "";
             this.email = "";
             this.password = "";
-            this.confirmPassword = "";
           }
         });
     },

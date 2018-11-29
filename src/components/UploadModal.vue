@@ -9,66 +9,40 @@
         </header>
         <section class="modal-card-body">
             <form enctype="multipart/form-data" v-on:submit.prevent="upload(content.id)">
-            <!-- <div v-if="imageData != ''">
-                  <img id="preview" v-bind:src="imageData">
-                </div>
-                <div v-else-if="content.data.image != ''">
-                  <img id="preview" v-bind:src="contentImage">
-                </div> -->
 
-                <!-- <div class="field">
-                  <div class="file is-primary has-name">
-                    <label class="file-label">
+              <div class="field">
+                <div class="file is-primary">
+                  <label class="file-label">
                     <input class="file-input" type="file" accept="image/*" v-on:change="previewImage">
-                    <span class="file-cta">
-                        <span class="file-icon">
-                        <i class="fas fa-upload"></i>
-                        </span>
-                        <span class="file-label">
-                        {{ fileMessage }}
-                        </span>
-                    </span>
-                    <span class="file-name" v-if="fileName != ''">
-                        {{ fileName }}
-                    </span>
-                    <span class="file-name" v-else-if="content.data.imageName != ''">
-                        {{ contentImageName }}
-                    </span>
-                    </label>
-                  </div>
-                </div> -->
-
-
-
-              <div v-for="index in images.length" :key="index">
-                <div v-if="images[index-1].image != ''">
-                  <img v-bind:src="images[index-1].image">
-                </div>
-
-                <div class="field">
-                  <div class="file is-primary has-name">
-                    <label class="file-label">
-                    <input class="file-input" type="file" accept="image/*" v-on:change="previewImage($event,index-1)">
                     <span class="file-cta">
                       <span class="file-icon">
                         <i class="fas fa-upload"></i>
                       </span>
                       <span class="file-label">
-                        {{ images[index-1].fileMessage }}
+                        Choose an image...
                       </span>
                     </span>
-                    <!-- <span class="file-name" v-if="images[index-1].imageName != ''">
-                      {{ images[index-1].imageName }}
-                    </span> -->
-                    </label>
+                  </label>
+                </div>
+              </div>
+
+              <p style="color: red; padding-bottom: 15px;">{{ imageErrorMessage }}</p>
+
+              <div class="columns is-multiline is-variable is-1" v-if="images.length > 0">
+                <div class="column is-narrow" v-for="index in images.length" :key="index">
+                  <div v-if="images[index-1].image != ''">
+                    <div>
+                      <div style="position: relative;">
+                        <button type="button" style="position: absolute; right: 0;" class="delete is-small" aria-label="close" v-on:click="deleteImage(index-1)"></button>
+                        <img style="width: 125px; height: 100px;" v-bind:src="images[index-1].image">
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <br v-if="images.length > 1">
-
               </div>
 
-              <div class="columns" v-if="images.length > 1">
+              <div class="columns">
                 <div class="field has-addons column is-half">
                   <div class="control">
                     <form v-on:submit.prevent="addTag">
@@ -83,25 +57,7 @@
                 </div>
               </div>
 
-              <!-- <div style="margin-top: 10px;" class="columns" v-if="content.data.image != '' || imageData != ''">
-                <div class="field has-addons column is-half">
-                  <div class="control">
-                    <form v-on:submit.prevent="addTag(content.data.upload ? tags : contentTags)">
-                    <input class="input" type="text" placeholder="Add tag..." v-model="tagInput">
-                    </form>
-                  </div>
-                  <div class="control">
-                    <a class="button is-primary" v-on:click="addTag(content.data.upload ? tags : contentTags)">
-                      <i class="fas fa-plus"></i>
-                    </a>
-                  </div>
-                </div>
-                <div class="column message is-narrow" v-if="tagError">
-                  <span style="color: red;">This tag already exists!</span>
-                </div>
-              </div> -->
-
-              <div class="columns is-multiline is-variable is-1" v-if="images.length > 1">
+              <div class="columns is-multiline is-variable is-1">
                 <div class="column is-narrow" v-for="tag in tags" :key="tag">
                   <span class="tag tagger is-medium">
                     {{ tag }}
@@ -110,42 +66,18 @@
                 </div>
               </div>
 
-              <!-- <div class="columns is-multiline is-variable is-1" v-if="content.data.image != '' || imageData != ''">
-                <div class="column is-narrow" v-for="tag in contentTags">
-                  <span class="tag tagger is-medium">
-                  {{ tag }}
-                  <button class="delete is-small" type="button" v-on:click="deleteTag(contentTags, tag)"></button>
-                  </span>
-                </div>
-                <div class="column is-narrow" v-for="tag in tags">
-                  <span class="tag tagger is-medium">
-                  {{ tag }}
-                  <button class="delete is-small" type="button" v-on:click="deleteTag(tags, tag)"></button>
-                  </span>
-                </div>
-              </div> -->
-
-              <div class="control" v-if="images.length > 1">
+              <div class="control">
                 <div>
                   <textarea class="textarea has-fixed-size" placeholder="Give a description..." v-model="description"></textarea>
                 </div>
                 <br>
               </div>
 
-              <!-- <div style="margin-bottom: 12px;" class="control" v-if="content.data.image != '' || imageData != ''">
-                <div v-if="content.data.description != ''">
-                  <textarea class="textarea has-fixed-size" placeholder="Give a description..." v-model="contentDescription"></textarea>
-                </div>
-                <div v-else>
-                  <textarea class="textarea has-fixed-size" placeholder="Give a description..." v-model="description"></textarea>
-                </div>
-              </div> -->
-
-              <div style="margin-bottom: -15px;" class="columns" v-if="images.length > 1">
+              <div style="margin-bottom: -15px;" class="columns">
                 <form class="column is-full" v-on:submit.prevent="codeAddress">
                   <div class="field has-addons" v-bind:class="{ 'is-loading': mapLoading }">
                     <div class="control is-expanded">
-                      <input class="input" type="text" placeholder="Address of destination..." v-model="address">
+                      <input id="address-input" class="input" type="text" placeholder="Address of destination..." v-model="address">
                     </div>
                     <div class="control">
                       <a class="button is-primary" v-on:click="codeAddress">
@@ -157,40 +89,15 @@
               </div>
               <p style="margin-top: 10px;" v-bind:style="{ color: addressFormatErrorColor }">{{ addressFormatMessage }}</p>
 
-              <!-- <div style="margin-top: 10px;" class="columns" v-if="content.data.image != '' || imageData != ''">
-                <form class="column is-full" v-on:submit.prevent="codeAddress">
-                  <div class="field has-addons" v-bind:class="{ 'is-loading': mapLoading }">
-                    <div class="control is-expanded">
-                      <input class="input" type="text" placeholder="Address..." v-model="contentAddress" v-if="content.data.location != undefined">
-                      <input class="input" type="text" placeholder="Address..." v-model="address" v-else>
-                    </div>
-                    <div class="control">
-                      <a class="button is-primary" v-on:click="codeAddress">
-                        Search
-                      </a>
-                    </div>
-                  </div>
-                </form>
-              </div> -->
-
-              <div style="margin-top: 15px;" class="columns" v-if="images.length > 1">
-                <div class="column is-narrow">
-                  <button class="button is-primary" v-bind:class="{ 'is-loading': isLoading }" v-if="images.length > 1">{{ content.data.upload ? 'Upload' : 'Update' }}</button>
-                </div>
-                <span class="column is-narrow message" v-bind:style="{ color: uploadMessage.messageColor }">{{ uploadMessage.message }}</span>
+              <div>
+                <span class="message" v-bind:style="{ color: uploadMessage.messageColor }">{{ uploadMessage.message }}</span>
               </div>
-
-              <!-- <div class="columns" v-if="content.data.image != '' || imageData != ''">
-                <div class="column is-narrow">
-                  <button class="button is-primary" v-bind:class="{ 'is-loading': isLoading }" v-if="content.data.image != '' || imageData != ''">Upload</button>
-                </div>
-                <span class="column is-narrow message" v-bind:style="{ color: uploadMessage.messageColor }">{{ uploadMessage.message }}</span>
-              </div> -->
 
             </form>
         </section>
         <footer class="modal-card-foot">
-            <button class="button" v-on:click="cancelModal">Cancel</button>
+          <button class="button is-primary" v-bind:class="{ 'is-loading': isLoading }" v-on:click="upload(content.id)">{{ content.data.upload ? 'Upload' : 'Update' }}</button>
+          <button class="button" v-on:click="cancelModal">Cancel</button>
         </footer>
         </div>
     </div>
@@ -208,16 +115,12 @@ export default {
     return {
       images: [],
       maxImages: 5,
-      // file: "",
-      // imagePreview: false,
-      // imageData: "",
-      // fileName: "",
-      // fileMessage: "Choose an image...",
       tagInput: "",
       tagError: false,
       description: "",
       tags: [],
       address: "",
+      imageErrorMessage: "",
       addressFormatSuccess: false,
       addressFormatErrorColor: "green",
       addressFormatMessage: "",
@@ -226,41 +129,10 @@ export default {
       placeLng: 0.0,
       distance: "",
       duration: ""
-
-      // contentImage: "",
-      // contentImageName: "",
-      // contentDescription: "",
-      // contentTags: [],
-      // contentAddress: "",
-      // contentLat: 0.0,
-      // contentLng: 0.0
-    };
-  },
-  mounted: function() {
-    this.images = [];
-    this.images[0] = {
-      image: "",
-      imageName: "",
-      fileMessage: "Choose an image..."
     };
   },
   watch: {
     "$store.getters.modalObject"() {
-      this.images = [];
-      for (var i = 0; i < this.content.data.images.length; i++) {
-        this.images.push({
-          image: this.content.data.images[i],
-          imageName: "",
-          fileMessage: "Choose a different image..."
-        });
-      }
-      if (this.images.length < 5) {
-        this.images.push({
-          image: "",
-          imageName: "",
-          fileMessage: "Choose an image..."
-        });
-      }
       this.description = this.content.data.description;
       this.tags = [];
       for (var i = 0; i < this.content.data.tags.length; i++) {
@@ -275,18 +147,6 @@ export default {
         this.addressFormatErrorColor = "green";
         this.addressFormatMessage = "";
       }
-      // this.contentImage = this.content.data.image;
-      // this.contentImageName = this.content.data.imageName;
-      // this.contentDescription = this.content.data.description;
-      // this.contentTags = [];
-      // for (var i = 0; i < this.content.data.tags.length; i++) {
-      //   this.contentTags.push(this.content.data.tags[i]);
-      // }
-      // this.contentAddress = this.content.data.address;
-      // if (this.content.data.location != undefined) {
-      //   this.contentLat = this.content.data.location.lat;
-      //   this.contentLng = this.content.data.location.lng;
-      // }
     }
   },
   computed: {
@@ -304,16 +164,11 @@ export default {
     }
   },
   methods: {
-    previewImage: function(event, index) {
-      console.log(index);
+    previewImage: function(event) {
       const input = event.target;
       // Ensure that you have a file before attempting to read it
       if (input.files && input.files[0]) {
-        // this.file = input.files[0];
         var file = input.files[0];
-        console.log(file);
-        // this.fileName = this.file.name;
-        this.images[index].imageName = file.name;
 
         // create a new FileReader to read this image and convert to base64 format
         const reader = new FileReader();
@@ -321,23 +176,13 @@ export default {
         reader.onload = e => {
           // Read image as base64 and set to imageData
 
-          // this.imageData = e.target.result;
-          this.images[index].image = e.target.result;
-          // this.imagePreview = true;
+          // this.images[index].image = e.target.result;
+          this.images.push({
+            image: e.target.result,
+            imageName: file.name
+          });
 
-          // this.fileMessage = "Choose a different image...";
-          this.images[index].fileMessage = "Choose a different image...";
-
-          if (
-            this.images.length < this.maxImages &&
-            this.images[index + 1] === undefined
-          ) {
-            this.images.push({
-              image: "",
-              imageName: "",
-              fileMessage: "Choose an image..."
-            });
-          }
+          this.imageErrorMessage = "";
         };
         // Start the reader job - read file as a data url (base64 format)
         reader.readAsDataURL(input.files[0]);
@@ -348,18 +193,13 @@ export default {
     },
     cancelModal: function() {
       this.$store.dispatch("modal", { show: false });
-      // this.file = "";
-      // this.imageData = "";
-      // this.imagePreview = false;
-      // this.fileMessage = "Choose an image...";
-      // this.fileName = "";
       this.images = [];
       this.images[0] = {
         image: "",
-        imageName: "",
-        fileMessage: "Choose an image..."
+        imageName: ""
       };
       this.address = "";
+      this.imageErrorMessage = "";
       this.addressFormatSuccess = false;
       this.addressFormatErrorColor = "red";
       this.addressFormatMessage = "";
@@ -369,22 +209,17 @@ export default {
       this.placeLng = 0.0;
       this.description = "";
       this.tags = [];
-
-      // this.contentImage = this.content.data.image;
-      // this.contentImageName = this.content.data.imageName;
-      // this.contentDescription = this.content.data.description;
-      // this.contentTags = [];
-      // for (var i = 0; i < this.content.data.tags.length; i++) {
-      //   this.contentTags.push(this.content.data.tags[i]);
-      // }
-      // this.contentAddress = this.content.data.address;
-      // this.contentLat = this.content.data.location.lat;
-      // this.contentLng = this.content.data.location.lng;
     },
     closeModal: function() {
       this.$store.dispatch("modal", { show: false });
+      this.imageErrorMessage = "";
+      this.addressFormatSuccess = false;
+      this.addressFormatErrorColor = "red";
+      this.addressFormatMessage = "";
     },
-    // addTag: function(tags) {
+    deleteImage: function(index) {
+      this.images.splice(index, 1);
+    },
     addTag: function() {
       for (var i = 0; i < this.tags.length; i++) {
         if (this.tags[i] === this.tagInput) {
@@ -396,7 +231,6 @@ export default {
       this.tags.push(this.tagInput.toLowerCase());
       this.tagInput = "";
     },
-    // deleteTag: function(tags, tag) {
     deleteTag: function(tag) {
       for (var i = 0; i < this.tags.length; i++) {
         if (this.tags[i] === tag) {
@@ -406,9 +240,15 @@ export default {
       }
     },
     upload: function(id) {
+      if (this.images.length === 0) {
+        this.imageErrorMessage = "You must select at least one image.";
+        return;
+      }
       if (!this.addressFormatSuccess) {
         this.addressFormatMessage = "Please validate this address.";
         this.addressFormatErrorColor = "red";
+        console.log("here");
+        $("#address-input").focus();
         return;
       }
       if (id !== "") {
@@ -416,11 +256,7 @@ export default {
         return;
       }
       var blobs = [];
-      var n = 0;
-      if (this.images.length < 5) {
-        n = this.images.length - 1;
-      }
-      for (var i = 0; i < n; i++) {
+      for (var i = 0; i < this.images.length; i++) {
         console.log(this.images);
         var block = this.images[i].image.split(";");
         var contentType = block[0].split(":")[1];
@@ -428,13 +264,8 @@ export default {
         var blob = this.b64toBlob(data, contentType);
         blobs.push({ image: blob, imageName: this.images[i].imageName });
       }
-      // var block = this.imageData.split(";");
-      // var contentType = block[0].split(":")[1];
-      // var data = block[1].split(",")[1];
       this.$store.dispatch("addUpload", {
-        // image: this.b64toBlob(data, contentType),
         images: blobs,
-        // imageName: this.fileName,
         description: this.description,
         tags: this.tags,
         address: this.address,
@@ -444,24 +275,17 @@ export default {
     update: function(id) {
       var blobs = new Set();
       var urls = [];
-      var n = 0;
-      if (this.images.length < 5) {
-        n = this.images.length - 1;
-      }
-      for (var i = 0; i < n; i++) {
-        // let blob;
+      for (var i = 0; i < this.images.length; i++) {
         console.log(this.images[i]);
         if (this.images[i].imageName !== "") {
           var block = this.images[i].image.split(";");
           var contentType = block[0].split(":")[1];
           var data = block[1].split(",")[1];
-          // blob = this.b64toBlob(data, contentType);
           blobs.add({
             image: this.b64toBlob(data, contentType),
             imageName: this.images[i].imageName
           });
         } else {
-          // blob = this.images[i].image;
           blobs.add({
             image: this.images[i].image,
             imageName: this.images[i].imageName
@@ -469,35 +293,12 @@ export default {
         }
       }
       console.log(blobs);
-      // if (this.imageData != "") {
-      //   block = this.imageData.split(";");
-      //   contentType = block[0].split(":")[1];
-      //   data = block[1].split(",")[1];
-      // }
-      // var imageName;
-      // var oldImageName;
-      // if (this.fileName !== this.contentImageName && this.fileName !== "") {
-      //   imageName = this.fileName;
-      //   oldImageName = this.contentImageName;
-      // } else {
-      //   imageName = this.contentImageName;
-      //   oldImageName = "";
-      // }
       this.$store.dispatch("updateUpload", {
         id: id,
-        // images: blobs,
         images: blobs,
-        // urls: urls,
-        // data != null ? this.b64toBlob(data, contentType) : this.contentImage,
-        // imageName: imageName,
-        // oldImageName: oldImageName,
-        // description: this.contentDescription,
         description: this.description,
-        // tags: this.contentTags,
         tags: this.tags,
-        // address: this.contentAddress,
         address: this.address,
-        // location: { lat: this.contentLat, lng: this.contentLng }
         location: { lat: this.placeLat, lng: this.placeLng }
       });
     },
@@ -582,5 +383,9 @@ img {
   margin: auto;
   margin-left: 0;
   background-color: white;
+}
+
+.error {
+  color: red;
 }
 </style>

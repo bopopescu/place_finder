@@ -348,60 +348,6 @@ export default new Vuex.Store({
 							context.commit('setUploadMessage', { message: 'Update unsuccessful. Please try again.', messageColor: 'red' });
 						});
 					}
-
-
-					// for (var i = 0; i < upload.images.length; i++) {
-					// 	if (upload.images[i].image instanceof Blob) {
-					// 		var storage = firebase.storage().ref();
-					// 		var task = storage.child('images/' + upload.images[i].imageName).put(upload.images[i].image);
-					// 		task.on('state_changed', function (snapshot) {
-
-					// 		}, function (error) {
-
-					// 		}, function () {
-					// 			task.snapshot.ref.getDownloadURL().then((downloadUrl) => {
-					// 				images.push(downloadUrl);
-					// 				if (images.length === upload.images.length) {
-					// 					db.collection('uploads').doc(upload.id).update({
-					// 						description: upload.description,
-					// 						images: images,
-					// 						tags: upload.tags,
-					// 						address: upload.address,
-					// 						location: upload.location
-					// 					}).then(function (docRef) {
-					// 						context.commit('setIsLoading', false);
-					// 						context.commit('setShowModal', false);
-					// 					}).catch(function (error) {
-					// 						context.commit('setIsLoading', false);
-					// 						console.log("Error uploading: ", error);
-					// 						context.commit('setUploadMessage', { message: 'Update unsuccessful. Please try again.', messageColor: 'red' });
-					// 					});
-					// 				}
-					// 			});
-					// 		});
-					// 	} else {
-					// 		if (!(upload.images[i].image instanceof Blob)) {
-					// 			images.push(upload.images[i].image);
-					// 		}
-					// 		if (images.length === upload.images.length) {
-					// 			console.log(images);
-					// db.collection('uploads').doc(upload.id).update({
-					// 	images: images,
-					// 	description: upload.description,
-					// 	tags: upload.tags,
-					// 	address: upload.address,
-					// 	location: upload.location
-					// }).then(function (docRef) {
-					// 	context.commit('setIsLoading', false);
-					// 	context.commit('setShowModal', false);
-					// }).catch(function (error) {
-					// 	context.commit('setIsLoading', false);
-					// 	console.log("Error uploading: ", error);
-					// 	context.commit('setUploadMessage', { message: 'Update unsuccessful. Please try again.', messageColor: 'red' });
-					// });
-					// 		}
-					// 	}
-					// }
 				}
 			});
 		},
