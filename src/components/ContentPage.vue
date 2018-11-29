@@ -2,7 +2,7 @@
   <div>
     <a style="float: left; margin-top: 30px; margin-left: 75px;" v-on:click="back" v-if="showExpandedView"><i class="fas fa-arrow-left fa-2x"></i></a>
     <transition id="expanded-section" name="expand">
-        <expanded-item-view id="top" v-if="showExpandedView" v-bind:class="{ 'expand-transition' : showExpandedView }"/>
+        <expanded-item-view v-if="showExpandedView" v-bind:class="{ 'expand-transition' : showExpandedView }"/>
     </transition>
     <section>
       <div class="columns is-multiline">
@@ -50,10 +50,7 @@ export default {
   components: { UploadModal, ExpandedItemView },
   props: ["content"],
   data() {
-    return {
-      // showPic: false,
-      // image: ""
-    };
+    return {};
   },
   computed: {
     showExpandedView: function() {
@@ -129,12 +126,12 @@ export default {
       if (this.$route.fullPath === "/user") {
         return;
       }
+      scroll(0, 0);
       this.$store
         .dispatch("expandItemObject", {
           id: item.id,
           data: {
             images: item.data.images,
-            // imageName: item.data.imageName,
             description: item.data.description,
             tags: item.data.tags,
             address: item.data.address,
@@ -156,7 +153,6 @@ export default {
         id: "",
         data: {
           images: [],
-          // imageName: "",
           description: "",
           tags: "",
           address: "",
