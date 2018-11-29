@@ -14,20 +14,10 @@
               </figure>
             </div>
 
-            <!-- <div class="modal" v-bind:class="{ 'is-active': showPic }">
-              <div class="modal-background"></div>
-              <div class="modal-content">
-                <p class="image is-4by3">
-                  <img v-bind:src="image" alt="">
-                </p>
-              </div>
-              <button class="modal-close is-large" aria-label="close" v-on:click="togglePic"></button>
-            </div> -->
-
             <div class="card-content">
               <div class="media">
                 <div class="media-content">
-                  <p class="title is-4">{{ item.data.username }}</p>
+                  <p class="title is-4">{{ item.data.address }}</p>
                   <p class="subtitle is-6"><a v-on:click.stop="searchUser(item.data.username)">@{{ item.data.username }}</a></p>
                 </div>
                 <div v-if="$route.fullPath == '/user'">
@@ -41,8 +31,6 @@
                   <a v-on:click.stop="search(tag)" href="#">#{{tag}}</a>
                 </div>
               </div>
-                <br>
-                <span><em>{{ item.data.address }}</em></span>
                 <br>
                 <time>Added: {{ item.data.created }}</time>
             </div>

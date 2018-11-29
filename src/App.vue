@@ -11,7 +11,21 @@ import AppHeader from "./components/AppHeader";
 import Footer from "./components/Footer";
 export default {
   name: "App",
-  components: { AppHeader, Footer }
+  components: { AppHeader, Footer },
+  computed: {
+    user: function() {
+      return this.$store.getters.user;
+    }
+  },
+  watch: {
+    $route: function() {
+      if (this.$route.fullPath === "/" && this.user) {
+        this.$router.push({
+          path: "/content"
+        });
+      }
+    }
+  }
 };
 </script>
 
