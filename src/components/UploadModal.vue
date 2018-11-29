@@ -133,6 +133,16 @@ export default {
   },
   watch: {
     "$store.getters.modalObject"() {
+      if (this.content.data.images.length > 0) {
+        this.images = [];
+        for (var i = 0; i < this.content.data.images.length; i++) {
+          console.log(this.content.data.images[i]);
+          this.images.push({
+            image: this.content.data.images[i],
+            imageName: ""
+          });
+        }
+      }
       this.description = this.content.data.description;
       this.tags = [];
       for (var i = 0; i < this.content.data.tags.length; i++) {

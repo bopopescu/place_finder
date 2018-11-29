@@ -7,7 +7,7 @@
     <section>
       <div class="columns is-multiline">
         <div class="column is-one-quarter" v-for="item in content">
-          <a href="#top" v-on:click="info(item)"><div class="card">
+          <a v-on:click.stop="info(item)"><div class="card">
             <div class="card-image">
               <figure class="image is-3by2">
                 <a><img v-bind:src="item.data.images[0]" alt="Loading..."></a>
