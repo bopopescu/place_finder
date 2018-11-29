@@ -17,7 +17,7 @@
           </div>
           <div class="modal-image">
             <p class="image">
-              <img v-bind:src="content.data.images[currImageIndex]">
+              <img style="max-height: 1000px; max-width: 900px;" v-bind:src="content.data.images[currImageIndex]">
             </p>
           </div>
           <button class="modal-close is-large" aria-label="close" v-on:click="toggleModal"></button>

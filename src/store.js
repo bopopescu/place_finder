@@ -526,5 +526,18 @@ export default new Vuex.Store({
 				context.commit('setShowExpandedView', true);
 			}
 		},
+
+		searchForItemObject(context, id) {
+			if (context.getters.expandedItemObject.id !== "") {
+				return;
+			}
+			for (var i = 0; i < context.getters.allContent.length; i++) {
+				if (context.getters.allContent[i].id === id) {
+					context.commit('setExpandedItemObject', context.getters.allContent[i]);
+					context.commit('setShowExpandedView', true);
+					break;
+				}
+			}
+		}
 	}
 });

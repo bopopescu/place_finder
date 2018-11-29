@@ -26,7 +26,7 @@
 
 				<form class="field navbar-item inputfield" v-on:submit.prevent="search">
 					<div class="control has-icons-left">
-						<input style="width: 450px;" class="input" placeholder="Search" v-model="keywords">
+						<input style="width: 450px;" class="input" placeholder="Search Pictogram" v-model="keywords">
 						<a href="#" v-on:click="search" class="icon is-small is-left search"><i class="fas fa-search"></i></a>
 					</div>
 				</form>
@@ -106,6 +106,9 @@ export default {
     },
     isLoading: function() {
       return this.$store.getters.isLoading;
+    },
+    currExpandedItem: function() {
+      return this.$store.getters.expandedItemObject;
     }
   },
   methods: {
@@ -127,6 +130,21 @@ export default {
         });
     },
     search: function() {
+      if (this.currExpandedItem.id !== "") {
+        this.$store.dispatch("expandItemObject", {
+          id: "",
+          data: {
+            images: [],
+            description: "",
+            tags: "",
+            address: "",
+            reviews: [],
+            location: {},
+            userename: "",
+            upload: false
+          }
+        });
+      }
       this.$router.push({
         path: "search",
         query: { keywords: this.keywords }

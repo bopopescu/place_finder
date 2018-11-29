@@ -19,7 +19,7 @@
                         <i class="fas fa-upload"></i>
                       </span>
                       <span class="file-label">
-                        Choose an image...
+                        Choose one or more images...*
                       </span>
                     </span>
                   </label>
@@ -77,10 +77,10 @@
                 <form class="column is-full" v-on:submit.prevent="codeAddress">
                   <div class="field has-addons" v-bind:class="{ 'is-loading': mapLoading }">
                     <div class="control is-expanded">
-                      <input id="address-input" class="input" type="text" placeholder="Address of destination..." v-model="address">
+                      <input id="address-input" class="input" type="text" placeholder="Address of destination...*" v-model="address">
                     </div>
                     <div class="control">
-                      <a class="button is-primary" v-on:click="codeAddress">
+                      <a class="button is-primary" v-on:click="codeAddress" v-bind:class="{ 'is-loading': mapLoading }">
                         Validate Address
                       </a>
                     </div>
@@ -186,7 +186,6 @@ export default {
         reader.onload = e => {
           // Read image as base64 and set to imageData
 
-          // this.images[index].image = e.target.result;
           this.images.push({
             image: e.target.result,
             imageName: file.name
@@ -341,24 +340,20 @@ export default {
     },
     codeAddress: function() {
       this.mapLoading = true;
-      var address;
-      if (this.contentAddress != undefined) {
-        address = this.contentAddress;
-      } else {
-        address = this.address;
-      }
       mapsClient.geocode(
         {
-          address: address
+          address: this.address
         },
         (err, response) => {
           if (!err) {
             var json = response.json.results;
-            if (this.contentAddress != undefined) {
-              this.contentAddress = json[0]["formatted_address"];
-            } else {
-              this.address = json[0]["formatted_address"];
+            if (json.length === 0) {
+              this.mapLoading = false;
+              this.addressFormatSuccess = false;
+              this.addressFormatErrorColor = "red";
+              this.addressFormatMessage = "Please try again.";
             }
+            this.address = json[0]["formatted_address"];
             this.placeLat = json[0]["geometry"]["location"]["lat"];
             this.placeLng = json[0]["geometry"]["location"]["lng"];
             this.mapLoading = false;

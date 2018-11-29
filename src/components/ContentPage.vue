@@ -33,6 +33,8 @@
               </div>
                 <br>
                 <time>Added: {{ item.data.created }}</time>
+                <br>
+                <p style="float: right; font-size: 1.1em;">{{ item.data.images.length}} photo<span v-if="item.data.images.length > 1">s</span></p>
             </div>
           </div></a>
         </div>
@@ -55,6 +57,28 @@ export default {
   computed: {
     showExpandedView: function() {
       return this.$store.getters.showExpandedView;
+    }
+  },
+  watch: {
+    $route: function() {
+      if (this.$route.fullPath === "/content") {
+        this.$store.dispatch("expandItemObject", {
+          id: "",
+          data: {
+            images: [],
+            description: "",
+            tags: "",
+            address: "",
+            reviews: [],
+            location: {},
+            userename: "",
+            upload: false
+          }
+        });
+      } else {
+        var id = this.$route.fullPath.split("/")[2];
+        this.$store.dispatch("searchForItemObject", id);
+      }
     }
   },
   methods: {
@@ -146,6 +170,10 @@ export default {
 
           $("expanded-section").removeClass("expand-leave");
           $("expanded-section").addClass("expand-transition");
+
+          this.$router.push({
+            path: "/content/" + item.id
+          });
         });
     },
     back: function() {
@@ -161,6 +189,9 @@ export default {
           userename: "",
           upload: false
         }
+      });
+      this.$router.push({
+        path: "/content"
       });
       $("expanded-section").removeClass("expand-transition");
       $("expanded-section").addClass("expand-leave");

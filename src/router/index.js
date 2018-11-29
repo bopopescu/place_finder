@@ -25,6 +25,11 @@ let router = new Router({
 
     },
     {
+      path: '/content/:id',
+      name: 'AllContentPage',
+      component: AllContentPage
+    },
+    {
       path: '/search',
       name: 'SearchResults',
       component: SearchResults
