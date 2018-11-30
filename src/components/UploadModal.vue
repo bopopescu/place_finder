@@ -230,6 +230,10 @@ export default {
       this.images.splice(index, 1);
     },
     addTag: function() {
+      if (this.tagInput === "") {
+        return;
+      }
+
       for (var i = 0; i < this.tags.length; i++) {
         if (this.tags[i] === this.tagInput) {
           this.tagError = true;
