@@ -162,17 +162,18 @@ export default new Vuex.Store({
 					return u.updateProfile({ displayName: user.username }).then(() => {
 						context.commit('setUser', u);
 						context.commit('setShowModal', false);
+						context.commit('setIsLoading', false);
 						return response;
 					}).catch((error) => {
 						console.log('Update User Error', error);
+						context.commit('setIsLoading', false);
 					});
 				}).catch(error => {
 					console.log(error);
 					context.commit('setRegisterError', error.message);
 					context.commit('setUser', null);
+					context.commit('setIsLoading', false);
 				});
-
-			context.commit('setIsLoading', false);
 		},
 
 		login(context, user) {

@@ -63,7 +63,7 @@
         </div>
 			</div>
       <div v-else class="navbar-end">
-        <a v-on:click="displayModal"><i class="fas fa-plus navbar-item fa-2x"></i></a>
+        <!-- <a v-on:click="displayModal"><i class="fas fa-plus navbar-item fa-2x"></i></a> -->
         <router-link v-bind:class="{ active: $route.fullPath === '/content' }" to="/content" class="navbar-item navbar-end navbar-text">
           All Content
         </router-link>
@@ -165,7 +165,6 @@ export default {
         id: "",
         data: {
           images: [],
-          // imageName: "",
           description: "",
           tags: [],
           userename: "",
@@ -179,7 +178,6 @@ export default {
         id: "",
         data: {
           images: [],
-          // imageName: "",
           description: "",
           tags: "",
           address: "",
