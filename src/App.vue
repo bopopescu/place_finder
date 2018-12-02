@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <app-header/>
+    <side-filter v-if="$route.fullPath !== '/user'"/>
     <router-view/>
     <footer/>
   </div>
@@ -8,10 +9,11 @@
 
 <script>
 import AppHeader from "./components/AppHeader";
+import SideFilter from "./components/SideFilter";
 import Footer from "./components/Footer";
 export default {
   name: "App",
-  components: { AppHeader, Footer },
+  components: { AppHeader, SideFilter, Footer },
   computed: {
     user: function() {
       return this.$store.getters.user;

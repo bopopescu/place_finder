@@ -173,7 +173,6 @@ export default {
       });
     },
     clearItemObject: function() {
-      console.log("here");
       this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
@@ -187,6 +186,8 @@ export default {
           upload: false
         }
       });
+
+      this.$store.dispatch("doFilter", []);
     }
   },
   mounted: function() {

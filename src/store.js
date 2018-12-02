@@ -30,6 +30,8 @@ export default new Vuex.Store({
 		userContent: [],
 		allContent: [],
 		searchResults: [],
+		filterResults: [],
+		filters: [],
 		isLoading: false,
 		showModal: false,
 		uploadMessage: {},
@@ -56,6 +58,8 @@ export default new Vuex.Store({
 		userContent: state => state.userContent,
 		allContent: state => state.allContent,
 		searchResults: state => state.searchResults,
+		filterResults: state => state.filterResults,
+		filters: state => state.filters,
 		isLoading: state => state.isLoading,
 		showModal: state => state.showModal,
 		uploadMessage: state => state.uploadMessage,
@@ -87,6 +91,12 @@ export default new Vuex.Store({
 		},
 		setSearchResults(state, results) {
 			state.searchResults = results;
+		},
+		setFilterResults(state, results) {
+			state.filterResults = results;
+		},
+		setFilters(state, filters) {
+			state.filters = filters;
 		},
 		setIsLoading(state, loading) {
 			state.isLoading = loading;
@@ -134,6 +144,8 @@ export default new Vuex.Store({
 			context.commit('setShowModal', false);
 			context.commit('setUploadMessage', {});
 			context.commit('setShowExpandedView', false);
+			context.commit('setSearchResults', []);
+			context.commit('setFilters', []);
 			firebase.auth().onAuthStateChanged((user) => {
 				if (user) {
 					context.commit('setUser', user);
@@ -214,7 +226,6 @@ export default new Vuex.Store({
 
 			firebase.auth().onAuthStateChanged((user) => {
 				if (user) {
-					console.log(upload.images);
 					var images = [];
 					var storage = firebase.storage().ref();
 					for (var i = 0; i < upload.images.length; i++) {
@@ -232,6 +243,7 @@ export default new Vuex.Store({
 									db.collection('uploads').add({
 										description: upload.description,
 										images: images,
+										categories: upload.categories,
 										tags: upload.tags,
 										address: upload.address,
 										location: upload.location,
@@ -318,6 +330,7 @@ export default new Vuex.Store({
 										db.collection('uploads').doc(upload.id).update({
 											description: upload.description,
 											images: images,
+											categories: upload.categories,
 											tags: upload.tags,
 											address: upload.address,
 											location: upload.location
@@ -336,6 +349,7 @@ export default new Vuex.Store({
 					} else {
 						db.collection('uploads').doc(upload.id).update({
 							images: images,
+							categories: upload.categories,
 							description: upload.description,
 							tags: upload.tags,
 							address: upload.address,
@@ -391,11 +405,6 @@ export default new Vuex.Store({
 				if (user) {
 					db.collection('uploads').doc(item.id).delete().then(function () {
 						console.log("delete successful");
-						// firebase.storage().ref().child('images/' + item.data.imageName).delete().then(function () {
-						// 	console.log("image deleted successfully");
-						// }).catch(function (error) {
-						// 	console.log("image not deleted successfully: ", error);
-						// });
 					}).catch(function (error) {
 						console.log("delete unsuccessful");
 					});
@@ -405,9 +414,15 @@ export default new Vuex.Store({
 
 		doSearch(context, keywords) {
 			let strings = keywords.split(/,?\s+/);
+			if (strings.includes("")) {
+				strings.pop();
+			}
+
+			console.log(strings);
 			var resultSet = new Set();
 			var results = [];
 			var allContent = context.getters.allContent;
+
 			for (var i = 0; i < strings.length; i++) {
 				for (var j = 0; j < allContent.length; j++) {
 					for (var m = 0; m < allContent[j].data.tags.length; m++) {
@@ -427,6 +442,11 @@ export default new Vuex.Store({
 				results.push(value);
 			});
 			context.commit('setSearchResults', results);
+			return true;
+		},
+
+		doFilter(context, filters) {
+			context.commit('setFilters', filters);
 		},
 
 		doUserSearch(context, username) {

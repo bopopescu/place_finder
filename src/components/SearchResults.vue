@@ -2,7 +2,7 @@
   <div>
     <h1>Results</h1>
     <h4>for "{{ keywords }}"</h4>
-    <content-page v-bind:content="searchResults"/>
+    <content-page v-bind:content="content"/>
   </div>
 </template>
 
@@ -11,12 +11,42 @@ import ContentPage from "./ContentPage";
 export default {
   name: "SearchResults",
   components: { ContentPage },
+  data() {
+    return {
+      content: []
+    };
+  },
   created: function() {
-    this.$store.dispatch("doSearch", this.$route.query.keywords);
+    this.$store.dispatch("doSearch", this.$route.query.keywords).then(resp => {
+      if (this.$store.getters.filters.length > 0) {
+        this.filterSearch();
+      }
+    });
   },
   watch: {
     "$route.query.keywords"() {
-      this.$store.dispatch("doSearch", this.$route.query.keywords);
+      this.$store
+        .dispatch("doSearch", this.$route.query.keywords)
+        .then(resp => {
+          if (this.$store.getters.filters.length > 0) {
+            this.filterSearch();
+          }
+        });
+    },
+    "$store.getters.searchResults": function() {
+      this.content = this.$store.getters.searchResults;
+    },
+    "$store.getters.filters": function() {
+      if (this.$store.getters.filters.length === 0) {
+        this.$store
+          .dispatch("doSearch", this.$route.query.keywords)
+          .then(resp => {
+            this.content = this.$store.getters.searchResults;
+            return;
+          });
+      }
+
+      this.filterSearch();
     }
   },
   computed: {
@@ -26,6 +56,21 @@ export default {
     keywords: function() {
       return this.$route.query.keywords;
     }
+  },
+  methods: {
+    filterSearch: function() {
+      this.content = this.$store.getters.searchResults;
+      var filters = this.$store.getters.filters;
+      if (filters.length === 0) {
+        this.content = this.$store.getters.allContent;
+        return;
+      }
+      this.content = this.searchResults.filter(
+        item =>
+          require("lodash.intersection")(item.data.categories, filters)
+            .length >= filters.length
+      );
+    }
   }
 };
 </script>
@@ -34,7 +79,7 @@ export default {
 h1 {
   font-size: 3em;
   margin: 0;
-  padding-left: 5%;
+  padding-left: 10%;
   padding-top: 2%;
   color: black;
 }
@@ -42,6 +87,6 @@ h1 {
 h4 {
   font-size: 1.5em;
   margin: 0;
-  padding-left: 5%;
+  padding-left: 10%;
 }
 </style>

@@ -39,8 +39,16 @@
                     </div>
                   </div>
                 </div>
-
               </div>
+
+              <div style="width: 75%;">
+                <multiselect v-model="values" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" placeholder="Pick all that apply" label="name" track-by="name">
+                  <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+                </multiselect>
+                <pre v-if="values.length"><code v-for="val in values"><p>{{ val.name }}</p></code></pre>
+              </div>
+
+              <br>
 
               <div class="columns">
                 <div class="field has-addons column is-half">
@@ -109,12 +117,26 @@ const mapsClient = require("@google/maps").createClient({
   key: "AIzaSyB3HKFnDKKFFCM_dTgTJGsTEOtOg3PQb04",
   rate: { limit: 50 }
 });
+import Multiselect from "vue-multiselect";
 export default {
   name: "UploadModal",
+  components: { Multiselect },
   data() {
     return {
       images: [],
       maxImages: 5,
+      values: [],
+      options: [
+        { name: "Family" },
+        { name: "Bridals" },
+        { name: "Engagements" },
+        { name: "Wedding" },
+        { name: "Portrait" },
+        { name: "Landscape" },
+        { name: "Couples" },
+        { name: "Adventure" },
+        { name: "Wildlife" }
+      ],
       tagInput: "",
       tagError: false,
       description: "",
@@ -136,13 +158,29 @@ export default {
       if (this.content.data.images.length > 0) {
         this.images = [];
         for (var i = 0; i < this.content.data.images.length; i++) {
-          console.log(this.content.data.images[i]);
           this.images.push({
             image: this.content.data.images[i],
             imageName: ""
           });
         }
       }
+
+      console.log(this.content.data);
+      if (this.content.data.categories === undefined) {
+        this.values = [];
+      }
+      if (
+        this.content.data.categories !== undefined &&
+        this.content.data.categories.length > 0
+      ) {
+        this.values = [];
+        for (var i = 0; i < this.content.data.categories.length; i++) {
+          this.values.push({
+            name: this.content.data.categories[i]
+          });
+        }
+      }
+
       this.description = this.content.data.description;
       this.tags = [];
       for (var i = 0; i < this.content.data.tags.length; i++) {
@@ -203,10 +241,7 @@ export default {
     cancelModal: function() {
       this.$store.dispatch("modal", { show: false });
       this.images = [];
-      this.images[0] = {
-        image: "",
-        imageName: ""
-      };
+      this.values = [];
       this.address = "";
       this.imageErrorMessage = "";
       this.addressFormatSuccess = false;
@@ -260,7 +295,6 @@ export default {
       if (!this.addressFormatSuccess) {
         this.addressFormatMessage = "Please validate this address.";
         this.addressFormatErrorColor = "red";
-        console.log("here");
         $("#address-input").focus();
         return;
       }
@@ -277,8 +311,15 @@ export default {
         var blob = this.b64toBlob(data, contentType);
         blobs.push({ image: blob, imageName: this.images[i].imageName });
       }
+
+      var categories = [];
+      for (var i = 0; i < this.values.length; i++) {
+        categories.push(this.values[i].name);
+      }
+
       this.$store.dispatch("addUpload", {
         images: blobs,
+        categories: categories,
         description: this.description,
         tags: this.tags,
         address: this.address,
@@ -305,10 +346,16 @@ export default {
           });
         }
       }
-      console.log(blobs);
+
+      var categories = [];
+      for (var i = 0; i < this.values.length; i++) {
+        categories.push(this.values[i].name);
+      }
+
       this.$store.dispatch("updateUpload", {
         id: id,
         images: blobs,
+        categories: categories,
         description: this.description,
         tags: this.tags,
         address: this.address,
@@ -377,6 +424,8 @@ export default {
   }
 };
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
 img {

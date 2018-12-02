@@ -34,6 +34,7 @@ export default {
         id: "",
         data: {
           images: [],
+          categories: [],
           description: "",
           tags: [],
           userename: "",

@@ -87,6 +87,7 @@ export default {
         id: item.id,
         data: {
           images: item.data.images,
+          categories: item.data.categories,
           description: item.data.description,
           tags: item.data.tags,
           address: item.data.address,
