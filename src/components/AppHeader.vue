@@ -65,7 +65,7 @@
       <div v-else class="navbar-end">
         <!-- <a v-on:click="displayModal"><i class="fas fa-plus navbar-item fa-2x"></i></a> -->
         <router-link v-bind:class="{ active: $route.fullPath === '/content' }" to="/content" class="navbar-item navbar-end navbar-text">
-          All Content
+          All Destinations
         </router-link>
         <router-link v-bind:class="{ active: $route.fullPath === '/user' }" to="/user" class="navbar-item navbar-text">
           <a style="color: black;" v-on:click="clearItemObject">Manage Destinations</a>
