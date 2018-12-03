@@ -17,6 +17,7 @@ export default {
     };
   },
   created: function() {
+    console.log(this.$route.query.keywords);
     this.$store.dispatch("doSearch", this.$route.query.keywords).then(resp => {
       if (this.$store.getters.filters.length > 0) {
         this.filterSearch();

@@ -144,6 +144,7 @@ export default {
             upload: false
           }
         });
+        this.$router.back();
       }
       this.$router.push({
         path: "search",

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header/>
-    <side-filter v-if="$route.fullPath.includes('/content')"/>
+    <side-filter id="side-filter" v-if="$route.fullPath.includes('/content') || $route.fullPath.includes('/search')"/>
     <router-view/>
     <footer/>
   </div>
@@ -25,6 +25,11 @@ export default {
         this.$router.push({
           path: "/content"
         });
+      }
+      if (this.$route.fullPath.includes("/content/")) {
+        $("#side-filter").addClass("hide");
+      } else {
+        $("#side-filter").removeClass("hide");
       }
     }
   }
@@ -81,5 +86,9 @@ body {
   height: 0;
   padding: 0 10px;
   opacity: 0;
+}
+
+.hide {
+  display: none;
 }
 </style>
