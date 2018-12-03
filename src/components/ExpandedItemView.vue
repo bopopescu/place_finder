@@ -35,7 +35,7 @@
         <br>
         <h4>{{ content.data.address }}</h4>
         <br>
-        <img class="container" id="map" v-bind:src="mapUrl">
+        <a v-bind:href="launchMapUrl" target="_blank"><img class="container" id="map" v-bind:src="mapUrl"></a>
         <br>
         <div class="columns is-variable is-1">
           <i class="fas fa-car fa-2x column is-narrow"></i>
@@ -106,6 +106,9 @@ export default {
     },
     mapUrl: function() {
       return this.$store.getters.mapUrl;
+    },
+    launchMapUrl: function() {
+      return this.$store.getters.launchMapUrl;
     },
     isLoading: function() {
       return this.$store.getters.isLoading;

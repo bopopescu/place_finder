@@ -32,6 +32,17 @@
 							</div>
 							<div class="column"></div>
 						</div>
+
+            <div class="columns" style="padding-bottom: 20px;">
+							<div class="column"></div>
+							<div class="column"></div>
+							<div class="column">
+								<router-link to="/content"><a class="button is-fullwidth" style="border-radius: 290486px; background-color: lightgray;">
+		          		Continue as guest
+		        		</a></router-link>
+							</div>
+							<div class="column"></div>
+						</div>
 					</div>
 				</transition>
 

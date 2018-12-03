@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header/>
-    <side-filter v-if="$route.fullPath !== '/user'"/>
+    <side-filter v-if="$route.fullPath.includes('/content')"/>
     <router-view/>
     <footer/>
   </div>

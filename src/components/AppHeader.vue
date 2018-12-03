@@ -37,9 +37,9 @@
 			</div>
 
 			<div class="navbar-end" v-if="!loggedIn">
-        <router-link v-bind:class="{ active: $route.fullPath === '/content' }" to="/content" class="navbar-item navbar-end navbar-text">
+        <!-- <router-link v-bind:class="{ active: $route.fullPath === '/content' }" to="/content" class="navbar-item navbar-end navbar-text">
           All Destinations
-        </router-link>
+        </router-link> -->
         <div class="field navbar-item inputfield">
           <p class="control has-icons-left">
             <input class="input" type="email" placeholder="Email" v-model="email" v-on:keyup.enter="login">

@@ -39,6 +39,7 @@ export default new Vuex.Store({
 		expandedItemObject: {},
 		showExpandedView: false,
 		mapUrl: '',
+		launchMapUrl: '',
 		distance: '',
 		duration: '',
 		reviewError: '',
@@ -67,6 +68,7 @@ export default new Vuex.Store({
 		expandedItemObject: state => state.expandedItemObject,
 		showExpandedView: state => state.showExpandedView,
 		mapUrl: state => state.mapUrl,
+		launchMapUrl: state => state.launchMapUrl,
 		distance: state => state.distance,
 		duration: state => state.duration,
 		reviewError: state => state.reviewError,
@@ -118,6 +120,9 @@ export default new Vuex.Store({
 		},
 		setMapUrl(state, url) {
 			state.mapUrl = url;
+		},
+		setLaunchMapUrl(state, url) {
+			state.launchMapUrl = url;
 		},
 		setDistance(state, distance) {
 			state.distance = distance;
@@ -492,6 +497,18 @@ export default new Vuex.Store({
 				"&key=AIzaSyB3HKFnDKKFFCM_dTgTJGsTEOtOg3PQb04";
 
 			context.commit('setMapUrl', mapUrl);
+
+			var launchMapUrl = "https://www.google.com/maps/dir/?api=1&origin=" +
+				userCoords.lat +
+				"," +
+				userCoords.lng +
+				"&destination=" +
+				destination.lat +
+				"," +
+				destination.lng +
+				"&travelmode=driving";
+
+			context.commit('setLaunchMapUrl', launchMapUrl);
 
 			var service = new google.maps.DistanceMatrixService();
 			service.getDistanceMatrix(
