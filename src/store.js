@@ -177,9 +177,9 @@ export default new Vuex.Store({
 
 					var u = firebase.auth().currentUser;
 					return u.updateProfile({ displayName: user.username }).then(() => {
-						context.commit('setUser', u);
 						context.commit('setShowModal', false);
 						context.commit('setIsLoading', false);
+						context.commit('setUser', u);
 						return response;
 					}).catch((error) => {
 						console.log('Update User Error', error);
