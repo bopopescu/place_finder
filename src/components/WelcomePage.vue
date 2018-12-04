@@ -37,9 +37,11 @@
 							<div class="column"></div>
 							<div class="column"></div>
 							<div class="column">
-								<router-link to="/content"><a class="button is-fullwidth" style="border-radius: 290486px; background-color: lightgray;">
-		          		Continue as guest
-		        		</a></router-link>
+								<router-link to="/content">
+                  <a class="button is-fullwidth" style="border-radius: 290486px; background-color: lightgray;" v-bind:class="{ 'is-loading': isLoading }" v-on:click="continueAsGuest">
+		          		  Continue as guest
+		        		  </a>
+                </router-link>
 							</div>
 							<div class="column"></div>
 						</div>
@@ -137,6 +139,12 @@ export default {
             this.password = "";
           }
         });
+    },
+    continueAsGuest: function() {
+      this.$store.dispatch("login", {
+        email: "guest@guest.com",
+        password: "guestuser100"
+      });
     },
     displayModal: function(type) {
       this.signupMode = type === "Sign up";

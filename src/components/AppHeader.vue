@@ -1,14 +1,14 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
   	<div class="navbar-brand">
-	    <router-link to="/" class="navbar-item navbar-text" v-if="!loggedIn">
+	    <router-link to="/" class="navbar-item navbar-text" v-bind:class="{ active: $route.fullPath === '/' }"> <!-- v-if="!loggedIn" -->
         <i class="fas fa-camera fa-2x"></i>
 	    	<strong style="margin-left: 5px; font-size: 1.2em;">Pictogram</strong>
 	    </router-link>
-      <router-link to="/content" class="navbar-item navbar-text" v-else>
+      <!-- <router-link to="/content" class="navbar-item navbar-text" v-else>
         <i class="fas fa-camera fa-2x"></i>
 	    	<strong style="margin-left: 5px; font-size: 1.2em;">Pictogram</strong>
-      </router-link>
+      </router-link> -->
 
 	    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
 	      <span aria-hidden="true"></span>
@@ -22,8 +22,8 @@
       </router-link> -->
 
 	  <div id="navbarBasicExample" class="navbar-menu">
-	    <div class="navbar-start">
-
+	    
+      <div class="navbar-start" v-if="loggedIn">
 				<form class="field navbar-item inputfield" v-on:submit.prevent="search">
 					<div class="control has-icons-left">
 						<input style="width: 450px;" class="input" placeholder="Search Pictogram" v-model="keywords">
@@ -67,7 +67,7 @@
         <router-link v-bind:class="{ active: $route.fullPath === '/content' }" to="/content" class="navbar-item navbar-end navbar-text">
           All Destinations
         </router-link>
-        <router-link v-bind:class="{ active: $route.fullPath === '/user' }" to="/user" class="navbar-item navbar-text">
+        <router-link v-bind:class="{ active: $route.fullPath === '/user' }" to="/user" class="navbar-item navbar-text" v-if="user.displayName !== null">
           <a style="color: black;" v-on:click="clearItemObject">Manage Destinations</a>
         </router-link>
         <a class="navbar-item navbar-text" v-on:click="logout">

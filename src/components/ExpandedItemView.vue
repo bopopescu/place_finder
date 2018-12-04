@@ -134,9 +134,12 @@ export default {
           address: "",
           reviews: [],
           location: {},
-          userename: "",
+          username: "",
           upload: false
         }
+      });
+      this.$router.replace({
+        path: "/content"
       });
       this.$router.push({
         path: "userfeed",

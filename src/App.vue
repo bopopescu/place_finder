@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header/>
-    <side-filter id="side-filter" v-if="$route.fullPath.includes('/content') || $route.fullPath.includes('/search')"/>
+    <side-filter id="side-filter" v-if="$route.fullPath.includes('/content') || $route.fullPath.includes('/search') || $route.fullPath.includes('/userfeed')"/>
     <router-view/>
     <footer/>
   </div>
@@ -21,10 +21,13 @@ export default {
   },
   watch: {
     $route: function() {
-      if (this.$route.fullPath === "/" && this.user) {
-        this.$router.push({
-          path: "/content"
-        });
+      // if (this.$route.fullPath === "/" && this.user) {
+      //   this.$router.push({
+      //     path: "/content"
+      //   });
+      // }
+      if (this.$route.fullPath === "/") {
+        this.$store.dispatch("doFilter", []);
       }
       if (this.$route.fullPath.includes("/content/")) {
         $("#side-filter").addClass("hide");

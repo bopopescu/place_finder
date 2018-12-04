@@ -50,11 +50,11 @@ let router = new Router({
   ]
 })
 
-if (store.state.user) {
-  router.push({
-    path: '/content'
-  });
-}
+// if (store.state.user) {
+//   router.push({
+//     path: '/content'
+//   });
+// }
 
 router.beforeEach(async (to, from, next) => {
   let currentUser = store.state.user;

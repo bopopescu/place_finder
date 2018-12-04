@@ -198,7 +198,11 @@ export default new Vuex.Store({
 				context.commit('setLoginError', 'Please enter valid information.');
 				return;
 			}
-			context.commit('setIsLoading', true);
+			if (user.email !== "guest@guest.com") {
+				context.commit('setIsLoading', true);
+			} else {
+				context.commit('setUser', { displayName: null });
+			}
 			return firebase.auth().signInWithEmailAndPassword(user.email, user.password)
 				.then(response => {
 					context.commit('setRegisterError', '');
@@ -374,7 +378,7 @@ export default new Vuex.Store({
 
 		addReview(context, info) {
 			firebase.auth().onAuthStateChanged((user) => {
-				if (user) {
+				if (user && user.displayName !== null) {
 					context.commit('setIsLoading', true);
 
 					db.collection('uploads').doc(info.id).get().then(doc => {
@@ -462,6 +466,7 @@ export default new Vuex.Store({
 				});
 			});
 			context.commit('setSearchResults', results);
+			return true;
 		},
 
 		tryAPIGeolocation(context) {

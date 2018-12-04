@@ -1,7 +1,10 @@
 <template>
   <div>
-    <h1>Results</h1>
-    <h4>for "{{ keywords }}"</h4>
+    <a style="float: left; margin-top: 45px;" v-on:click="back"><i class="fas fa-arrow-left fa-2x"></i></a>
+    <div style="margin-left: 50px;">
+      <h1>Results</h1>
+      <h4>for "{{ keywords }}"</h4>
+    </div>
     <content-page v-bind:content="content"/>
   </div>
 </template>
@@ -17,7 +20,6 @@ export default {
     };
   },
   created: function() {
-    console.log(this.$route.query.keywords);
     this.$store.dispatch("doSearch", this.$route.query.keywords).then(resp => {
       if (this.$store.getters.filters.length > 0) {
         this.filterSearch();
@@ -71,6 +73,9 @@ export default {
           require("lodash.intersection")(item.data.categories, filters)
             .length >= filters.length
       );
+    },
+    back: function() {
+      this.$router.back();
     }
   }
 };

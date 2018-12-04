@@ -28,7 +28,7 @@
               <span id="description">{{ item.data.description }}</span>
               <div class="content columns is-multiline">
                 <div class="column tag tagstyle is-narrow" v-for="tag in item.data.tags">
-                  <a v-on:click.stop="search(tag)" href="#">#{{tag}}</a>
+                  <a v-on:click.stop="search(tag)">#{{tag}}</a>
                 </div>
               </div>
                 <br>
