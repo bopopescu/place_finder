@@ -38,7 +38,7 @@
 							<div class="column"></div>
 							<div class="column">
 								<router-link to="/content">
-                  <a class="button is-fullwidth" style="border-radius: 290486px; background-color: lightgray;" v-bind:class="{ 'is-loading': isLoading }" v-on:click="continueAsGuest">
+                  <a class="button is-fullwidth" style="border-radius: 290486px; background-color: lightgray;" v-on:click="continueAsGuest">
 		          		  Continue as guest
 		        		  </a>
                 </router-link>

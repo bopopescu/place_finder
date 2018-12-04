@@ -1,14 +1,14 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
   	<div class="navbar-brand">
-	    <router-link to="/" class="navbar-item navbar-text" v-bind:class="{ active: $route.fullPath === '/' }"> <!-- v-if="!loggedIn" -->
+	    <router-link to="/" class="navbar-item navbar-text" v-bind:class="{ active: $route.fullPath === '/' }" v-if="!loggedIn"> <!-- v-if="!loggedIn" -->
         <i class="fas fa-camera fa-2x"></i>
 	    	<strong style="margin-left: 5px; font-size: 1.2em;">Pictogram</strong>
 	    </router-link>
-      <!-- <router-link to="/content" class="navbar-item navbar-text" v-else>
+      <router-link to="/content" class="navbar-item navbar-text" v-else>
         <i class="fas fa-camera fa-2x"></i>
 	    	<strong style="margin-left: 5px; font-size: 1.2em;">Pictogram</strong>
-      </router-link> -->
+      </router-link>
 
 	    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
 	      <span aria-hidden="true"></span>
