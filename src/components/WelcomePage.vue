@@ -5,6 +5,58 @@
 				<h1>Pictogram</h1>
 				<h3>A place to share and view photography destinations.</h3>
 
+        <div class="ia-container" style="float: left; position: absolute; margin-left: 5%;">
+				
+					<figure>
+						<img src="../../static/adventure.jpg" alt="image01" />
+						<input id="image0" type="radio" name="radio-set" checked="checked"/>
+						
+						<figure>
+							<img src="../../static/autumn.jpg" alt="image02" />
+							<input id="image1" type="radio" name="radio-set" />
+							
+							<figure>
+								<img src="../../static/architectural.jpg" alt="image03" />
+								<input id="image2" type="radio" name="radio-set" />
+								
+								<figure>
+									<img src="../../static/autumn-leaves.jpg" alt="image04" />
+									<input id="image3" type="radio" name="radio-set" />
+									
+									<figure>
+										<img src="../../static/arch.jpg" alt="image05" />
+										<input id="image4" type="radio" name="radio-set" />
+										
+										<figure>
+											<img src="../../static/branches.jpg" alt="image06" />
+											<input id="image5" type="radio" name="radio-set" />
+								
+											<figure>
+												<img src="../../static/clouds.jpg" alt="image07" />
+												<input id="image6" type="radio" name="radio-set" />									
+
+												<figure>
+													<img src="../../static/countryside.jpg" alt="image08" />
+													<input id="ia-selector-last" type="radio" name="radio-set" />
+
+												</figure>
+												
+											</figure>
+								
+										</figure>	
+											
+									</figure>	
+										
+								</figure>
+									
+							</figure>
+							
+						</figure>
+						
+					</figure>
+					
+				</div><!-- ia-container -->
+
 				<transition name="slide-fade">
 					<div v-if="!loggedIn">
 						<div class="columns" style="padding-bottom: 20px;"></div>
@@ -16,7 +68,7 @@
 							<div class="column"></div>
 							<div class="column"></div>
 							<div class="column">
-								<a class="button is-primary is-fullwidth" style="border-radius: 290486px;" v-on:click="displayModal('Sign up')">
+								<a class="button is-primary is-fullwidth"  v-on:click="displayModal('Sign up')">
 		          		<strong>Sign up</strong>
 		        		</a>
 							</div>
@@ -26,7 +78,7 @@
 							<div class="column"></div>
 							<div class="column"></div>
 							<div class="column">
-								<a class="button is-fullwidth" style="border-radius: 290486px;" v-on:click="displayModal('Login')">
+								<a class="button is-fullwidth"  v-on:click="displayModal('Login')">
 		          		Login
 		        		</a>
 							</div>
@@ -38,7 +90,7 @@
 							<div class="column"></div>
 							<div class="column">
 								<router-link to="/content">
-                  <a class="button is-fullwidth" style="border-radius: 290486px; background-color: lightgray;" v-on:click="continueAsGuest">
+                  <a class="button is-fullwidth" style="background-color: lightgray;" v-on:click="continueAsGuest">
 		          		  Continue as guest
 		        		  </a>
                 </router-link>
@@ -108,11 +160,30 @@ export default {
       email: "",
       password: "",
       modalTitle: "",
-      signupMode: false
+      signupMode: false,
+      imageId: 0,
+      interval: null
     };
   },
+  created: function() {
+    let vm = this;
+    this.imageId = 0;
+    console.log("mounted");
+    this.interval = setInterval(function() {
+      if (vm.imageId === 7) {
+        $("#ia-selector-last").prop("checked", true);
+      } else {
+        $("#image" + vm.imageId).prop("checked", true);
+      }
+      vm.imageId = (vm.imageId + 1) % 8;
+    }, 2000);
+  },
   methods: {
+    clearInterval: function() {
+      clearInterval(this.interval);
+    },
     signup: function() {
+      var vm = this;
       this.$store
         .dispatch("signup", {
           username: this.username,
@@ -124,10 +195,13 @@ export default {
             this.username = "";
             this.email = "";
             this.password = "";
+
+            vm.clearInterval();
           }
         });
     },
     login: function() {
+      var vm = this;
       this.$store
         .dispatch("login", {
           email: this.email,
@@ -137,6 +211,8 @@ export default {
           if (user !== undefined) {
             this.email = "";
             this.password = "";
+
+            vm.clearInterval();
           }
         });
     },
@@ -145,6 +221,7 @@ export default {
         email: "guest@guest.com",
         password: "guestuser100"
       });
+      this.clearInterval();
     },
     displayModal: function(type) {
       this.signupMode = type === "Sign up";
@@ -189,13 +266,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.main-header {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("../../static/park2.jpg");
-  size: 100% 100%;
-  height: 860px;
-}
-
 .signup-form {
   background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9));
 }
@@ -208,17 +278,154 @@ h1 {
   font-size: 5em;
   margin: 0;
   padding-left: 5%;
-  padding-top: 5%;
-  color: white;
+  padding-top: 4%;
+  color: black;
 }
 
 h3 {
   font-size: 2em;
-  padding-left: 10%;
-  color: white;
+  padding-left: 9%;
+  color: black;
 }
 
 .columns {
   padding-left: 5%;
+}
+
+.ia-container {
+  width: 685px;
+  margin: 20px auto;
+  overflow: hidden;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+  border: 7px solid rgba(255, 255, 255, 0.6);
+}
+
+.ia-container figure {
+  position: absolute;
+  top: 0;
+  left: 50px; /* width of visible piece */
+  width: 335px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.ia-container > figure {
+  position: relative;
+  left: 0 !important;
+}
+
+.ia-container img {
+  display: block;
+  width: 100%;
+  height: 300px !important;
+  object-fit: cover !important;
+}
+
+.ia-container input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px; /* just cover visible part */
+  height: 100%;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+  z-index: 100;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.ia-container input:checked {
+  width: 5px;
+  left: auto;
+  right: 0px;
+}
+.ia-container input:checked ~ figure {
+  -webkit-transition: all 0.7s ease-in-out;
+  -moz-transition: all 0.7s ease-in-out;
+  -o-transition: all 0.7s ease-in-out;
+  -ms-transition: all 0.7s ease-in-out;
+  transition: all 0.7s ease-in-out;
+  left: 335px;
+}
+
+.ia-container input:checked + figcaption,
+.ia-container input:checked:hover + figcaption {
+  background: rgba(87, 73, 81, 0);
+}
+
+.ia-container input:checked + figcaption span {
+  -webkit-transition: all 0.4s ease-in-out 0.5s;
+  -moz-transition: all 0.4s ease-in-out 0.5s;
+  -o-transition: all 0.4s ease-in-out 0.5s;
+  -ms-transition: all 0.4s ease-in-out 0.5s;
+  transition: all 0.4s ease-in-out 0.5s;
+
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=99)";
+  filter: alpha(opacity=99);
+  opacity: 1;
+
+  top: 50%;
+}
+
+.ia-container #ia-selector-last:checked + figcaption span {
+  -webkit-transition-delay: 0.3s;
+  -moz-transition-delay: 0.3s;
+  -o-transition-delay: 0.3s;
+  -ms-transition-delay: 0.3s;
+  transition-delay: 0.3s;
+}
+
+.ia-container input:hover + figcaption {
+  background: rgba(87, 73, 81, 0.03);
+}
+
+.ia-container input:checked ~ figure input {
+  z-index: 1;
+}
+
+@media screen and (max-width: 720px) {
+  .ia-container {
+    width: 540px;
+  }
+
+  .ia-container figure {
+    left: 40px;
+    width: 260px;
+  }
+
+  .ia-container input {
+    width: 40px;
+  }
+
+  .ia-container input:checked ~ figure {
+    left: 260px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .ia-container {
+    width: 320px;
+  }
+
+  .ia-container figure {
+    left: 20px;
+    width: 180px;
+  }
+
+  .ia-container input {
+    width: 20px;
+  }
+
+  .ia-container input:checked ~ figure {
+    left: 180px;
+  }
 }
 </style>

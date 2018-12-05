@@ -15,7 +15,7 @@ export default {
   components: { ContentPage, fab },
   data() {
     return {
-      bgColor: "#35605a",
+      bgColor: "#006064",
       position: "bottom-right",
       fabAction: []
     };

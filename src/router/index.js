@@ -5,6 +5,7 @@ import UserPage from '@/components/UserPage'
 import AllContentPage from '@/components/AllContentPage'
 import SearchResults from '@/components/SearchResults'
 import UserResults from '@/components/UserResults'
+import ExpandedItemPage from '@/components/ExpandedItemPage'
 
 import store from '../store'
 
@@ -28,6 +29,11 @@ let router = new Router({
       path: '/content/:id',
       name: 'AllContentPage',
       component: AllContentPage
+    },
+    {
+      path: '/item',
+      name: 'ExpandedItemPage',
+      component: ExpandedItemPage
     },
     {
       path: '/search',

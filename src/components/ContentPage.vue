@@ -1,16 +1,16 @@
 <template>
   <div>
-    <a style="float: left; margin-top: 30px; margin-left: 75px;" v-on:click="back" v-if="showExpandedView"><i class="fas fa-arrow-left fa-2x"></i></a>
+    <!-- <a style="float: left; margin-top: 30px; margin-left: 75px;" v-on:click="back" v-if="showExpandedView"><i class="fas fa-arrow-left fa-2x"></i></a>
     <transition id="expanded-section" name="expand">
         <expanded-item-view v-if="showExpandedView" v-bind:class="{ 'expand-transition' : showExpandedView }"/>
-    </transition>
+    </transition> -->
     <section>
       <div class="columns is-multiline">
         <div class="column is-one-quarter" v-for="item in content">
           <a v-on:click.stop="info(item)"><div class="card">
             <div class="card-image">
               <figure class="image is-3by2">
-                <a><img v-bind:src="item.data.images[0]" alt="Loading..."></a>
+                <a><img style="object-fit: cover;" v-bind:src="item.data.images[0]" alt="Loading..."></a>
               </figure>
             </div>
 
@@ -26,15 +26,15 @@
                 </div>
               </div>
               <span id="description">{{ item.data.description }}</span>
-              <div class="content columns is-multiline">
+              <div class="content columns is-multiline is-variable is-1">
                 <div class="column tag tagstyle is-narrow" v-for="tag in item.data.tags">
                   <a v-on:click.stop="search(tag)">#{{tag}}</a>
                 </div>
               </div>
                 <br>
-                <time>Added: {{ item.data.created }}</time>
+                <span style="position: absolute; bottom: 0; margin: 10px; margin-left: -10px;"><time>Added: {{ item.data.created }}</time></span>
                 <br>
-                <p style="float: right; font-size: 1.1em;">{{ item.data.images.length}} photo<span v-if="item.data.images.length > 1">s</span></p>
+                <p style="float: right; bottom: 0; right: 0; position: absolute; font-size: 1.1em; margin: 10px;">{{ item.data.images.length}} photo<span v-if="item.data.images.length > 1">s</span></p>
             </div>
           </div></a>
         </div>
@@ -173,7 +173,9 @@ export default {
           $("expanded-section").addClass("expand-transition");
 
           this.$router.push({
-            path: "/content/" + item.id
+            // path: "/content/" + item.id,
+            path: "/item",
+            query: { id: item.id }
           });
         });
     },
@@ -219,15 +221,15 @@ section {
 .card {
   display: flex;
   flex-direction: column;
-  max-height: 100%; /* change to 'height' to make all cards same height */
+  height: 100%; /* change to 'height' to make all cards same height */
 }
 
 .fa-edit {
-  color: #35605a;
+  color: #006064;
 }
 
 .fa-edit:hover {
-  color: #6b818c;
+  color: #428e92;
 }
 
 .delete {

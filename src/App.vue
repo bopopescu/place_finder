@@ -42,11 +42,15 @@ export default {
 <style>
 @import "bulma-start-master/css/main.css";
 @import "https://fonts.googleapis.com/icon?family=Material+Icons";
-@import url("https://fonts.googleapis.com/css?family=Catamaran");
+/* @import url("https://fonts.googleapis.com/css?family=Catamaran"); */
+@import url("https://fonts.googleapis.com/css?family=Quicksand");
 
 html,
-body {
-  font-family: "Catamaran", sans-serif;
+body,
+button,
+input {
+  /* font-family: "Catamaran", sans-serif; */
+  font-family: "Quicksand", sans-serif !important;
 }
 
 body {

@@ -46,6 +46,7 @@ export default new Vuex.Store({
 		reviewState: false,
 		currReviews: [],
 		averageRating: 0.0,
+		relatedContent: []
 	},
 	getters: {
 		user: state => state.user,
@@ -74,6 +75,7 @@ export default new Vuex.Store({
 		reviewError: state => state.reviewError,
 		currReviews: state => state.currReviews,
 		averageRating: state => state.averageRating,
+		relatedContent: state => state.relatedContent,
 	},
 	mutations: {
 		setUser(state, user) {
@@ -138,6 +140,9 @@ export default new Vuex.Store({
 		},
 		setAverageRating(state, rating) {
 			state.averageRating = rating;
+		},
+		setRelatedContent(state, content) {
+			state.relatedContent = content;
 		}
 	},
 	actions: {
@@ -581,6 +586,54 @@ export default new Vuex.Store({
 					break;
 				}
 			}
+		},
+
+		getRelatedContent(context, id) {
+			if (id === '') {
+				context.commit('setRelatedContent', []);
+				return;
+			}
+			var allContent = context.getters.allContent;
+			var resultSet = new Set();
+			var results = [];
+			var tags = [];
+			var address = '';
+
+			for (var i = 0; i < allContent.length; i++) {
+				if (allContent[i].id === id) {
+					tags = allContent[i].data.tags;
+					address = allContent[i].data.address;
+					break;
+				}
+			}
+
+			for (var i = 0; i < tags.length; i++) {
+				for (var j = 0; j < allContent.length; j++) {
+					if (allContent[j].data.tags.includes(tags[i])) {
+						resultSet.add(allContent[j]);
+					}
+				}
+			}
+
+			let locationStrings = address.toLowerCase().split(/,?\s+/);
+			if (locationStrings.includes("usa")) {
+				locationStrings.splice(locationStrings.indexOf("usa"), 1);
+			}
+			for (var i = 0; i < locationStrings.length; i++) {
+				for (var j = 0; j < allContent.length; j++) {
+					if (allContent[j].data.address.toLowerCase().includes(locationStrings[i].toLowerCase())) {
+						resultSet.add(allContent[j]);
+					}
+				}
+			}
+
+			resultSet.forEach(value => {
+				if (value.id !== id) {
+					results.push(value);
+				}
+			});
+
+			context.commit('setRelatedContent', results);
 		}
 	}
 });

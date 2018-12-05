@@ -1279,11 +1279,11 @@ a.box:active {
                 box-shadow: none;
         color: whitesmoke; }
   .button.is-primary {
-    background-color: #35605A;
+    background-color: #006064;
     border-color: transparent;
     color: #fff; }
     .button.is-primary:hover, .button.is-primary.is-hovered {
-      background-color: #6B818C;
+      background-color: #428e92;
       border-color: transparent;
       color: #fff; }
     .button.is-primary:focus, .button.is-primary.is-focused {
@@ -1293,11 +1293,11 @@ a.box:active {
         -webkit-box-shadow: 0 0 0 0.125em rgba(0, 209, 178, 0.25);
                 box-shadow: 0 0 0 0.125em rgba(0, 209, 178, 0.25); }
     .button.is-primary:active, .button.is-primary.is-active {
-      background-color: #35605A;
+      background-color: #006064;
       border-color: transparent;
       color: #fff; }
     .button.is-primary[disabled] {
-      background-color: #6B818C;
+      background-color: #428e92;
       border-color: transparent;
       -webkit-box-shadow: none;
               box-shadow: none; }
@@ -2405,11 +2405,11 @@ a.box:active {
     border-color: transparent;
     color: whitesmoke; }
   .file.is-primary .file-cta {
-    background-color: #35605A;
+    background-color: #006064;
     border-color: transparent;
     color: #fff; }
   .file.is-primary:hover .file-cta, .file.is-primary.is-hovered .file-cta {
-    background-color: #6B818C;
+    background-color: #428e92;
     border-color: transparent;
     color: #fff; }
   .file.is-primary:focus .file-cta, .file.is-primary.is-focused .file-cta {
@@ -2418,7 +2418,7 @@ a.box:active {
             box-shadow: 0 0 0.5em rgba(0, 209, 178, 0.25);
     color: #fff; }
   .file.is-primary:active .file-cta, .file.is-primary.is-active .file-cta {
-    background-color: #35605A;
+    background-color: #006064;
     border-color: transparent;
     color: #fff; }
   .file.is-link .file-cta {
@@ -3081,7 +3081,7 @@ a.box:active {
     background-color: #363636;
     color: whitesmoke; }
   .notification.is-primary {
-    background-color: #00d1b2;
+    background-color: #006064;
     color: #fff; }
   .notification.is-link {
     background-color: #3273dc;
