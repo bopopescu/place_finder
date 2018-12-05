@@ -41,14 +41,27 @@
                 </div>
               </div>
 
-              <div style="width: 75%;">
-                <multiselect v-model="values" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" placeholder="Pick all that apply" label="name" track-by="name">
-                  <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
-                </multiselect>
-                <pre v-if="values.length"><code v-for="val in values"><p>{{ val.name }}</p></code></pre>
-              </div>
+              <p style="margin-bottom: 10px;">Select all categories that apply</p>
 
-              <br>
+              <table class="table is-narrow is-fullwidth">
+                <tbody>
+                  <tr>
+                    <td><label class="checkbox"><input id="Family" type="checkbox" v-on:change="categoryClick('Family')">Family</label></td>
+                    <td><label class="checkbox"><input id="Bridals" type="checkbox" v-on:change="categoryClick('Bridals')">Bridals</label></td>
+                    <td><label class="checkbox"><input id="Engagements" type="checkbox" v-on:change="categoryClick('Engagements')">Engagements</label></td>
+                  </tr>
+                  <tr>
+                    <td><label class="checkbox"><input id="Wedding" type="checkbox" v-on:change="categoryClick('Wedding')">Wedding</label></td>
+                    <td><label class="checkbox"><input id="Portrait" type="checkbox" v-on:change="categoryClick('Portrait')">Portrait</label></td>
+                    <td><label class="checkbox"><input id="Landscape" type="checkbox" v-on:change="categoryClick('Landscape')">Landscape</label></td>
+                  </tr>
+                  <tr>
+                    <td><label class="checkbox"><input id="Couples" type="checkbox" v-on:change="categoryClick('Couples')">Couples</label></td>
+                    <td><label class="checkbox"><input id="Adventure" type="checkbox" v-on:change="categoryClick('Adventure')">Adventure</label></td>
+                    <td><label class="checkbox"><input id="Wildlife" type="checkbox" v-on:change="categoryClick('Wildlife')">Wildlife</label></td>
+                  </tr>
+                </tbody>
+              </table>
 
               <div class="columns">
                 <div class="field has-addons column is-half">
@@ -125,7 +138,7 @@ export default {
     return {
       images: [],
       maxImages: 5,
-      values: [],
+      categories: [],
       options: [
         { name: "Family" },
         { name: "Bridals" },
@@ -165,19 +178,21 @@ export default {
         }
       }
 
+      for (var i = 0; i < this.options.length; i++) {
+        $("#" + this.options[i].name).prop("checked", false);
+      }
       console.log(this.content.data);
       if (this.content.data.categories === undefined) {
-        this.values = [];
+        this.categories = [];
       }
       if (
         this.content.data.categories !== undefined &&
         this.content.data.categories.length > 0
       ) {
-        this.values = [];
+        this.categories = [];
         for (var i = 0; i < this.content.data.categories.length; i++) {
-          this.values.push({
-            name: this.content.data.categories[i]
-          });
+          this.categories.push(this.content.data.categories[i]);
+          $("#" + this.content.data.categories[i]).prop("checked", true);
         }
       }
 
@@ -235,12 +250,22 @@ export default {
         reader.readAsDataURL(input.files[0]);
       }
     },
+    categoryClick: function(category) {
+      if (this.categories.indexOf(category) >= 0) {
+        this.categories.splice(this.categories.indexOf(category), 1);
+      } else {
+        this.categories.push(category);
+      }
+
+      console.log(this.categories);
+    },
     displayModal: function() {
       this.$store.dispatch("modal", { show: true });
     },
     cancelModal: function() {
       this.$store.dispatch("modal", { show: false });
       this.images = [];
+      this.categories = [];
       this.values = [];
       this.address = "";
       this.imageErrorMessage = "";
@@ -312,14 +337,9 @@ export default {
         blobs.push({ image: blob, imageName: this.images[i].imageName });
       }
 
-      var categories = [];
-      for (var i = 0; i < this.values.length; i++) {
-        categories.push(this.values[i].name);
-      }
-
       this.$store.dispatch("addUpload", {
         images: blobs,
-        categories: categories,
+        categories: this.categories,
         description: this.description,
         tags: this.tags,
         address: this.address,
@@ -347,15 +367,10 @@ export default {
         }
       }
 
-      var categories = [];
-      for (var i = 0; i < this.values.length; i++) {
-        categories.push(this.values[i].name);
-      }
-
       this.$store.dispatch("updateUpload", {
         id: id,
         images: blobs,
-        categories: categories,
+        categories: this.categories,
         description: this.description,
         tags: this.tags,
         address: this.address,
@@ -445,5 +460,15 @@ img {
 
 .error {
   color: red;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.table,
+td,
+tr {
+  border: none;
 }
 </style>

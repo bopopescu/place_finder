@@ -168,7 +168,10 @@ export default {
   created: function() {
     let vm = this;
     this.imageId = 0;
-    console.log("mounted");
+
+    if (this.interval != null) {
+      this.clearInterval();
+    }
     this.interval = setInterval(function() {
       if (vm.imageId === 7) {
         $("#ia-selector-last").prop("checked", true);

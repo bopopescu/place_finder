@@ -2,11 +2,11 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
   	<div class="navbar-brand">
 	    <router-link to="/" class="navbar-item navbar-text" v-bind:class="{ active: $route.fullPath === '/' }" v-if="!loggedIn"> <!-- v-if="!loggedIn" -->
-        <i style="color: #6f79a8;" class="fas fa-camera fa-2x"></i>
+        <i style="color: #00363a;" class="fas fa-camera fa-2x"></i>
 	    	<strong style="margin-left: 5px; font-size: 1.2em;">Pictogram</strong>
 	    </router-link>
       <router-link to="/content" class="navbar-item navbar-text" v-else>
-        <i class="fas fa-camera fa-2x"></i>
+        <i style="color: #00363a;" class="fas fa-camera fa-2x"></i>
 	    	<strong style="margin-left: 5px; font-size: 1.2em;">Pictogram</strong>
       </router-link>
 
