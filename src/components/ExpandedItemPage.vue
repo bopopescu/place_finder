@@ -37,6 +37,7 @@ export default {
   },
   methods: {
     back: function() {
+      this.$store.dispatch("doFilter", []);
       this.$store.dispatch("expandItemObject", {
         id: "",
         data: {
