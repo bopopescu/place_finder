@@ -57,7 +57,7 @@ let router = new Router({
 })
 
 if (store.state.user) {
-  router.push({
+  router.replace({
     path: '/content'
   });
 }
