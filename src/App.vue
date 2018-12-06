@@ -98,4 +98,12 @@ body {
 .hide {
   display: none;
 }
+
+button:active {
+  transform: translateY(4px) !important;
+}
+
+a.button:active {
+  transform: translateY(4px);
+}
 </style>
