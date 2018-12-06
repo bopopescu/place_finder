@@ -167,26 +167,25 @@ export default {
   },
   created: function() {
     let vm = this;
+    let id = 0;
     this.imageId = 0;
 
-    if (this.interval != null) {
-      this.clearInterval();
-    }
+    this.clear();
     this.interval = setInterval(function() {
-      if (vm.imageId === 7) {
+      if (id === 7) {
         $("#ia-selector-last").prop("checked", true);
       } else {
-        $("#image" + vm.imageId).prop("checked", true);
+        $("#image" + id).prop("checked", true);
       }
-      vm.imageId = (vm.imageId + 1) % 8;
+      id = (id + 1) % 8;
     }, 2000);
   },
   methods: {
-    clearInterval: function() {
+    clear: function() {
       clearInterval(this.interval);
     },
     signup: function() {
-      var vm = this;
+      this.clear();
       this.$store
         .dispatch("signup", {
           username: this.username,
@@ -198,13 +197,11 @@ export default {
             this.username = "";
             this.email = "";
             this.password = "";
-
-            vm.clearInterval();
           }
         });
     },
     login: function() {
-      var vm = this;
+      this.clear();
       this.$store
         .dispatch("login", {
           email: this.email,
@@ -214,17 +211,15 @@ export default {
           if (user !== undefined) {
             this.email = "";
             this.password = "";
-
-            vm.clearInterval();
           }
         });
     },
     continueAsGuest: function() {
+      this.clear();
       this.$store.dispatch("login", {
         email: "guest@guest.com",
         password: "guestuser100"
       });
-      this.clearInterval();
     },
     displayModal: function(type) {
       this.signupMode = type === "Sign up";
