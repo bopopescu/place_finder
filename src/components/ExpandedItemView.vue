@@ -1,5 +1,5 @@
 <template>
-  <div class="container" style="display: flex;">
+  <div style="display: flex;">
     <div>
       <div style="margin-top: 20px;" class="box">
         <div style="position: relative">

@@ -1,9 +1,13 @@
 <template>
   <div>
-    <a style="float: left; margin-top: 30px; margin-left: 75px;" v-on:click="back" v-if="showExpandedView"><i class="fas fa-arrow-left fa-2x"></i></a>
-    <transition id="expanded-section" name="expand">
-      <expanded-item-view v-if="showExpandedView" v-bind:class="{ 'expand-transition' : showExpandedView }"/>
-    </transition>
+    <div>
+      <a style="float: left; margin-top: 30px; margin-left: 75px; position: relative" v-on:click="back" v-if="showExpandedView"><i class="fas fa-arrow-left fa-2x"></i></a>
+      <transition id="expanded-section" name="expand">
+        <div class="container" style="margin-left: 350px;">
+          <expanded-item-view v-if="showExpandedView" v-bind:class="{ 'expand-transition' : showExpandedView }"/>
+        </div>
+      </transition>
+    </div>
 
     <h1>Related content & things nearby</h1>
     <content-page v-bind:content="relatedContent"/>

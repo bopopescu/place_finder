@@ -67,7 +67,7 @@
 						<div class="columns" style="padding-bottom: 20px;">
 							<div class="column"></div>
 							<div class="column"></div>
-							<div class="column">
+							<div style="padding-left: 250px;" class="column">
 								<a class="button is-primary is-fullwidth"  v-on:click="displayModal('Sign up')">
 		          		<strong>Sign up</strong>
 		        		</a>
@@ -77,7 +77,7 @@
 						<div class="columns" style="padding-bottom: 20px;">
 							<div class="column"></div>
 							<div class="column"></div>
-							<div class="column">
+							<div style="padding-left: 250px;" class="column">
 								<a class="button is-fullwidth"  v-on:click="displayModal('Login')">
 		          		Login
 		        		</a>
@@ -88,7 +88,7 @@
             <div class="columns" style="padding-bottom: 20px;">
 							<div class="column"></div>
 							<div class="column"></div>
-							<div class="column">
+							<div style="padding-left: 250px;" class="column">
 								<router-link to="/content">
                   <a class="button is-fullwidth" style="background-color: lightgray;" v-on:click="continueAsGuest">
 		          		  Continue as guest
