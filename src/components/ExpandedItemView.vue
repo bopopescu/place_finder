@@ -105,7 +105,7 @@ export default {
     }
   },
   watch: {
-    "$store.getters.expandedItemObject": function() {
+    content: function() {
       this.images = [];
       this.currImageIndex = 0;
       for (var i = 0; i < this.content.data.images.length; i++) {

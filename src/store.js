@@ -576,9 +576,7 @@ export default new Vuex.Store({
 		},
 
 		searchForItemObject(context, id) {
-			// console.log("here");
-			// console.log(id);
-			if (context.getters.expandedItemObject.id !== "") {
+			if (context.getters.expandedItemObject.id === "") {
 				return;
 			}
 			for (var i = 0; i < context.getters.allContent.length; i++) {
