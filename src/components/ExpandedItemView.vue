@@ -97,6 +97,7 @@ export default {
   },
   created: function() {
     this.images = [];
+    this.currImageIndex = 0;
     for (var i = 0; i < this.content.data.images.length; i++) {
       var image = new Image();
       image.src = this.content.data.images[i];
@@ -106,6 +107,7 @@ export default {
   watch: {
     "$store.getters.expandedItemObject": function() {
       this.images = [];
+      this.currImageIndex = 0;
       for (var i = 0; i < this.content.data.images.length; i++) {
         var image = new Image();
         image.src = this.content.data.images[i];

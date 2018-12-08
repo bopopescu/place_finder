@@ -77,7 +77,7 @@ export default {
         });
       } else {
         var id = this.$route.fullPath.split("/")[2];
-        this.$store.dispatch("searchForItemObject", id);
+        // this.$store.dispatch("searchForItemObject", id);
       }
     }
   },

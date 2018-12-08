@@ -28,6 +28,8 @@ export default {
   },
   watch: {
     "$route.query.id": function() {
+      console.log(this.$route.query.id);
+      this.$store.dispatch("searchForItemObject", this.$route.query.id);
       this.$store.dispatch("getRelatedContent", this.$route.query.id);
     }
   },
