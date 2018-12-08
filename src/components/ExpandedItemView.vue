@@ -3,7 +3,7 @@
     <div>
       <div style="margin-top: 20px;" class="box">
         <div style="position: relative">
-          <a><img class="container" id="image" v-bind:src="content.data.images[currImageIndex]" v-on:click="toggleModal"></a>
+          <a><img class="container" id="image" v-bind:src="images[currImageIndex].src" v-on:click="toggleModal"></a>
           <a v-on:click="rightArrowClick" v-if="content.data.images.length > 1"><i class="far fa-arrow-alt-circle-right fa-3x right-arrow"></i></a>
           <a v-on:click="leftArrowClick" v-if="content.data.images.length > 1"><i class="far fa-arrow-alt-circle-left fa-3x left-arrow"></i></a>
         </div>
@@ -91,8 +91,27 @@ export default {
       rating: 0.0,
       seeReviews: false,
       currImageIndex: 0,
-      showImageModal: false
+      showImageModal: false,
+      images: []
     };
+  },
+  created: function() {
+    this.images = [];
+    for (var i = 0; i < this.content.data.images.length; i++) {
+      var image = new Image();
+      image.src = this.content.data.images[i];
+      this.images.push(image);
+    }
+  },
+  watch: {
+    "$store.getters.expandedItemObject": function() {
+      this.images = [];
+      for (var i = 0; i < this.content.data.images.length; i++) {
+        var image = new Image();
+        image.src = this.content.data.images[i];
+        this.images.push(image);
+      }
+    }
   },
   computed: {
     content: function() {
