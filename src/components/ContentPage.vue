@@ -222,6 +222,12 @@ section {
   display: flex;
   flex-direction: column;
   height: 100%; /* change to 'height' to make all cards same height */
+  border-radius: 10px;
+}
+
+img {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .fa-edit {
