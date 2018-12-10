@@ -113,6 +113,8 @@ export default {
         image.src = this.content.data.images[i];
         this.images.push(image);
       }
+
+      // this.$store.dispatch("tryAPIGeolocation");
     }
   },
   computed: {

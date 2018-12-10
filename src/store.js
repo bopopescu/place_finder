@@ -534,6 +534,7 @@ export default new Vuex.Store({
 					if (status !== "OK") {
 						console.log("Error was: " + status);
 					} else {
+						console.log(response.rows);
 						context.commit('setDistance', response.rows[0].elements[0].distance.text);
 						context.commit('setDuration', response.rows[0].elements[0].duration.text);
 					}
@@ -586,6 +587,22 @@ export default new Vuex.Store({
 					break;
 				}
 			}
+
+			console.log(context.getters.expandedItemObject.data);
+			var total = 0.0;
+			if (context.getters.expandedItemObject.data.reviews !== undefined) {
+				context.commit('setCurrReviews', context.getters.expandedItemObject.data.reviews);
+				for (var i = 0; i < context.getters.expandedItemObject.data.reviews.length; i++) {
+					total += context.getters.expandedItemObject.data.reviews[i].rating;
+				}
+				var average = (total / context.getters.expandedItemObject.data.reviews.length).toFixed(1);
+				context.commit('setAverageRating', average);
+			} else {
+				context.commit('setCurrReviews', undefined);
+				context.commit('setAverageRating', 0);
+			}
+
+			context.dispatch('tryAPIGeolocation');
 		},
 
 		getRelatedContent(context, id) {
